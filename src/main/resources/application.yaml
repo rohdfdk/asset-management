@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: asset-management
+
+  # 1. データベース接続設定
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_db
+    username: loan_user
+    password: REDACTED
+    driver-class-name: org.postgresql.Driver
+
+  # 2. JPAの設定
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # 3. Flywayの設定
+  flyway:
+    enabled: false # テーブル設計が完全に固まるまではオフにしておく
