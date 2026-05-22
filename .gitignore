@@ -1,0 +1,43 @@
+# --- Maven ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# --- OS generated files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- IntelliJ IDEA ---
+.idea/
+# ただし、実行構成とデータベース設定、プロジェクトのJPA設定はGit管理に含める（共有するため）
+!.idea/runConfigurations/
+!.idea/dataSources.xml
+!.idea/dataSources.local.xml
+!.idea/jpa-navigator.xml
+*.iws
+*.iml
+*.ipr
+
+# --- Eclipse / STS ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# --- VS Code ---
+.vscode/
+
+# --- NetBeans ---
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
