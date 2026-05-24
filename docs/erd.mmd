@@ -1,0 +1,40 @@
+erDiagram
+    USERS ||--o{ LOANS : "borrows"
+    ASSETS ||--o{ LOANS : "is loaned in"
+
+    USERS {
+        BIGSERIAL id PK
+        VARCHAR(50) username UK "NOT NULL"
+        VARCHAR(100) password "NOT NULL"
+        VARCHAR(100) email "NOT NULL"
+        VARCHAR(50) full_name "NOT NULL"
+        VARCHAR(20) role "NOT NULL, ADMIN/USER"
+        BOOLEAN active "NOT NULL, DEFAULT true"
+        TIMESTAMP created_at "NOT NULL"
+        TIMESTAMP updated_at "NOT NULL"
+    }
+
+    ASSETS {
+        BIGSERIAL id PK
+        VARCHAR(50) asset_code UK "NOT NULL"
+        VARCHAR(100) name "NOT NULL"
+        VARCHAR(500) description
+        VARCHAR(50) category "NOT NULL"
+        VARCHAR(20) status "NOT NULL, AVAILABLE/LOANED/MAINTENANCE/RETIRED"
+        VARCHAR(200) location
+        TIMESTAMP created_at "NOT NULL"
+        TIMESTAMP updated_at "NOT NULL"
+    }
+
+    LOANS {
+        BIGSERIAL id PK
+        BIGINT asset_id FK "NOT NULL"
+        BIGINT user_id FK "NOT NULL"
+        DATE loan_date "NOT NULL"
+        DATE expected_return_date "NOT NULL"
+        DATE actual_return_date "NULL"
+        VARCHAR(20) status "NOT NULL, ACTIVE/RETURNED/OVERDUE"
+        VARCHAR(500) remarks
+        TIMESTAMP created_at "NOT NULL"
+        TIMESTAMP updated_at "NOT NULL"
+    }
