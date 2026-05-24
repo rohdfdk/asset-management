@@ -20,4 +20,5 @@ spring:
 
   # 3. Flywayの設定
   flyway:
-    enabled: false # テーブル設計が完全に固まるまではオフにしておく
+    enabled: true
+    baseline-on-migrate: true
