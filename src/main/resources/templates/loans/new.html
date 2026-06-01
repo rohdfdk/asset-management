@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('貸出登録')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<main class="container py-4">
+    <h1 class="mb-4">貸出登録</h1>
+
+    <form th:action="@{/loans-view}" th:object="${loanRequest}" method="post" class="card">
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="assetId" class="form-label">資産</label>
+                <select id="assetId" th:field="*{assetId}" class="form-select" required>
+                    <option value="">選択してください</option>
+                    <option th:each="asset : ${assets}"
+                            th:value="${asset.id}"
+                            th:text="${asset.assetCode + ' - ' + asset.name}">
+                        PC001 - ノートPC
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="userId" class="form-label">利用者</label>
+                <select id="userId" th:field="*{userId}" class="form-select" required>
+                    <option value="">選択してください</option>
+                    <option th:each="user : ${users}"
+                            th:value="${user.id}"
+                            th:text="${user.fullName + ' / ' + user.username}">
+                        田中太郎 / tanaka
+                    </option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="loanDate" class="form-label">貸出日</label>
+                <input id="loanDate" type="date" th:field="*{loanDate}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="expectedReturnDate" class="form-label">返却予定日</label>
+                <input id="expectedReturnDate" type="date" th:field="*{expectedReturnDate}" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="remarks" class="form-label">備考</label>
+                <textarea id="remarks" th:field="*{remarks}" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="card-footer d-flex gap-2">
+            <button type="submit" class="btn btn-primary">登録</button>
+            <a th:href="@{/loans-view}" class="btn btn-outline-secondary">戻る</a>
+        </div>
+    </form>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
