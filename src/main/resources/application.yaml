@@ -2,6 +2,9 @@ spring:
   application:
     name: asset-management
 
+  profiles:
+    active: dev
+
   # 1. データベース接続設定
   datasource:
     url: jdbc:postgresql://localhost:5432/loan_db
