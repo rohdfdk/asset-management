@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('ダッシュボード')}"></head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<main class="container py-4">
+    <h1 class="mb-4">ダッシュボード</h1>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card text-bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">資産数</h5>
+                    <p class="display-6" th:text="${assets.size()}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">ユーザー数</h5>
+                    <p class="display-6" th:text="${users.size()}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">貸出中</h5>
+                    <p class="display-6" th:text="${activeLoans.size()}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">延滞</h5>
+                    <p class="display-6" th:text="${overdueLoans.size()}">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2 flex-wrap">
+        <a class="btn btn-primary" th:href="@{/assets-view}">資産一覧</a>
+        <a class="btn btn-success" th:href="@{/users-view}">ユーザー一覧</a>
+        <a class="btn btn-warning" th:href="@{/loans-view}">貸出一覧</a>
+        <a class="btn btn-outline-primary" th:href="@{/loans-view/new}">貸出登録</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
