@@ -29,6 +29,12 @@ public class LoanService {
                 .toList();
     }
 
+    public List<LoanResponse> findByUsername(String username) {
+        return loanRepository.findByUserUsername(username).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
     public LoanResponse findById(Long id) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Loan not found: " + id));
@@ -81,6 +87,22 @@ public class LoanService {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found: " + loanId));
 
+        return toResponse(loan);
+    }
+
+    @Transactional
+    public LoanResponse returnLoanAsUser(Long loanId, String username, boolean admin) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan not found: " + loanId));
+
+        if (!admin && !loan.getUser().getUsername().equals(username)) {
+            throw new RuntimeException("You are not allowed to return this loan");
+        }
+
+        return returnLoanInternal(loan);
+    }
+
+    private LoanResponse returnLoanInternal(Loan loan) {
         if (!"ACTIVE".equals(loan.getStatus())) {
             throw new RuntimeException("Loan is not active");
         }
@@ -88,7 +110,6 @@ public class LoanService {
         loan.setActualReturnDate(LocalDate.now());
         loan.setStatus("RETURNED");
 
-        // 資産のステータスを更新
         Asset asset = loan.getAsset();
         asset.setStatus("AVAILABLE");
         assetRepository.save(asset);

@@ -6,6 +6,8 @@ import org.example.assetmanagement.dto.LoanRequest;
 import org.example.assetmanagement.service.AssetService;
 import org.example.assetmanagement.service.LoanService;
 import org.example.assetmanagement.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,8 +39,15 @@ public class LoanPageController {
     }
 
     @PostMapping("/{id}/return")
-    public String returnLoan(@PathVariable Long id) {
-        loanService.returnLoan(id);
+    public String returnLoan(@PathVariable Long id, Authentication authentication) {
+        boolean admin = hasRole(authentication, "ROLE_ADMIN");
+        loanService.returnLoanAsUser(id, authentication.getName(), admin);
         return "redirect:/loans-view";
+    }
+
+    private boolean hasRole(Authentication authentication, String role) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role::equals);
     }
 }
