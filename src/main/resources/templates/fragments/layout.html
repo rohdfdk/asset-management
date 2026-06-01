@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">貸出管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">貸出管理</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="navbarContent" class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/}">ダッシュボード</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/assets-view}">資産</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/users-view}">ユーザー</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/loans-view}">貸出</a>
+                </li>
+            </ul>
+
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-light btn-sm">
+                    ログアウト
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div th:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>
