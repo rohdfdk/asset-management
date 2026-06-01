@@ -30,7 +30,7 @@ public class LoanController {
 
     @GetMapping("/active")
     public ResponseEntity<List<LoanResponse>> getActiveLoans() {
-        return ResponseEntity.ok(loanService.findActiveLoa());
+        return ResponseEntity.ok(loanService.findActiveLoans());
     }
 
     @GetMapping("/overdue")
