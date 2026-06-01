@@ -17,8 +17,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    // TODO:本番環境ではPasswordEncoderを使用すること
-    // private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public List<UserResponse> findAll() {
         return userRepository.findAll().stream()
@@ -50,9 +49,7 @@ public class UserService {
 
         User user = new User();
         user.setUsername(request.getUsername());
-        // TODO: 本番環境では必ずパスワードをハッシュ化すること
-        // user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPassword(request.getPassword()); // 開発用（暫定）
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
         user.setRole(request.getRole());
@@ -81,8 +78,7 @@ public class UserService {
 
         user.setUsername(request.getUsername());
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            // user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setPassword(request.getPassword()); // 開発用（暫定）
+             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
