@@ -5,6 +5,8 @@ import org.example.assetmanagement.dto.LoanRequest;
 import org.example.assetmanagement.service.AssetService;
 import org.example.assetmanagement.service.LoanService;
 import org.example.assetmanagement.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +42,22 @@ public class ViewController {
     }
 
     @GetMapping("/loans-view")
-    public String loans(Model model) {
-        model.addAttribute("loans", loanService.findAll());
+    public String loans(Model model, Authentication authentication) {
+        boolean admin = hasRole(authentication, "ROLE_ADMIN");
+
+        if (admin) {
+            model.addAttribute("loans", loanService.findAll());
+        } else {
+            model.addAttribute("loans", loanService.findByUsername(authentication.getName()));
+        }
+
         return "loans/list";
+    }
+
+    private boolean hasRole(Authentication authentication, String role) {
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role::equals);
     }
 
     @GetMapping("/loans-view/new")
