@@ -15,8 +15,7 @@ public class LoanRequest {
 
     @NotNull(message = "資産IDは必須です")
     private Long assetId;
-
-    @NotNull(message = "ユーザーIDは必須です")
+    
     private Long userId;
 
     @NotNull(message = "貸出日は必須です")
