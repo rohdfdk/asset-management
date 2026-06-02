@@ -26,28 +26,32 @@ public class LoanPageController {
     public String createLoan(
             @Valid @ModelAttribute LoanRequest request,
             BindingResult bindingResult,
-            Model model
+            Model model,
+            Authentication authentication
     ) {
+        boolean admin = hasRole(authentication);
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("assets", assetService.findByStatus("AVAILABLE"));
             model.addAttribute("users", userService.findAll());
+            model.addAttribute("admin", admin);
             return "loans/new";
         }
 
-        loanService.createLoan(request);
+        loanService.createLoanAsUser(request, authentication.getName(), admin);
         return "redirect:/loans-view";
     }
 
     @PostMapping("/{id}/return")
     public String returnLoan(@PathVariable Long id, Authentication authentication) {
-        boolean admin = hasRole(authentication, "ROLE_ADMIN");
+        boolean admin = hasRole(authentication);
         loanService.returnLoanAsUser(id, authentication.getName(), admin);
         return "redirect:/loans-view";
     }
 
-    private boolean hasRole(Authentication authentication, String role) {
+    private boolean hasRole(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(role::equals);
+                .anyMatch("ROLE_ADMIN"::equals);
     }
 }

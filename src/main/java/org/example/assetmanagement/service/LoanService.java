@@ -8,6 +8,7 @@ import org.example.assetmanagement.entity.User;
 import org.example.assetmanagement.repository.AssetRepository;
 import org.example.assetmanagement.repository.LoanRepository;
 import org.example.assetmanagement.repository.UserRepository;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,6 +67,32 @@ public class LoanService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found: " + request.getUserId()));
 
+        return getLoanResponse(request, asset, user);
+    }
+
+    @Transactional
+    public void createLoanAsUser(LoanRequest request, String username, boolean admin) {
+        Asset asset = assetRepository.findById(request.getAssetId())
+                .orElseThrow(() -> new RuntimeException("Asset not found: " + request.getAssetId()));
+
+        if (!"AVAILABLE".equals(asset.getStatus())) {
+            throw new RuntimeException("Asset is not available for loan");
+        }
+
+        User user;
+        if (admin) {
+            user = userRepository.findById(request.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found: " + request.getUserId()));
+        } else {
+            user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        }
+
+        getLoanResponse(request, asset, user);
+    }
+
+    @NonNull
+    private LoanResponse getLoanResponse(LoanRequest request, Asset asset, User user) {
         Loan loan = new Loan();
         loan.setAsset(asset);
         loan.setUser(user);
@@ -74,7 +101,6 @@ public class LoanService {
         loan.setStatus("ACTIVE");
         loan.setRemarks(request.getRemarks());
 
-        // 資産のステータスを更新
         asset.setStatus("LOANED");
         assetRepository.save(asset);
 
