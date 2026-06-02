@@ -43,7 +43,7 @@ public class ViewController {
 
     @GetMapping("/loans-view")
     public String loans(Model model, Authentication authentication) {
-        boolean admin = hasRole(authentication, "ROLE_ADMIN");
+        boolean admin = hasRole(authentication);
 
         if (admin) {
             model.addAttribute("loans", loanService.findAll());
@@ -54,17 +54,21 @@ public class ViewController {
         return "loans/list";
     }
 
-    private boolean hasRole(Authentication authentication, String role) {
+    private boolean hasRole(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
-                .anyMatch(role::equals);
+                .anyMatch("ROLE_ADMIN"::equals);
     }
 
     @GetMapping("/loans-view/new")
-    public String newLoan(Model model) {
+    public String newLoan(Model model, Authentication authentication) {
+        boolean admin = hasRole(authentication);
+
         model.addAttribute("loanRequest", new LoanRequest());
         model.addAttribute("assets", assetService.findByStatus("AVAILABLE"));
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("admin", admin);
+
         return "loans/new";
     }
 }

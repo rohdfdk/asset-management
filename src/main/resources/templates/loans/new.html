@@ -21,9 +21,9 @@
                 </select>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3" th:if="${admin}">
                 <label for="userId" class="form-label">利用者</label>
-                <select id="userId" th:field="*{userId}" class="form-select" required>
+                <select id="userId" th:field="*{userId}" class="form-select" th:required="${admin}">
                     <option value="">選択してください</option>
                     <option th:each="user : ${users}"
                             th:value="${user.id}"
@@ -31,6 +31,10 @@
                         田中太郎 / tanaka
                     </option>
                 </select>
+            </div>
+
+            <div class="alert alert-info" th:unless="${admin}">
+                一般ユーザーの場合、貸出利用者はログイン中の自分として登録されます。
             </div>
 
             <div class="mb-3">
