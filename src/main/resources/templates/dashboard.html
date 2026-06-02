@@ -47,7 +47,11 @@
 
     <div class="mt-4 d-flex gap-2 flex-wrap">
         <a class="btn btn-primary" th:href="@{/assets-view}">資産一覧</a>
-        <a class="btn btn-success" th:href="@{/users-view}">ユーザー一覧</a>
+        <a class="btn btn-success"
+           th:href="@{/users-view}"
+           sec:authorize="hasRole('ADMIN')">
+            ユーザー一覧
+        </a>
         <a class="btn btn-warning" th:href="@{/loans-view}">貸出一覧</a>
         <a class="btn btn-outline-primary" th:href="@{/loans-view/new}">貸出登録</a>
     </div>
