@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.dto.AssetRequest;
 import org.example.assetmanagement.dto.AssetResponse;
 import org.example.assetmanagement.entity.Asset;
+import org.example.assetmanagement.entity.AssetStatus;
 import org.example.assetmanagement.repository.AssetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public class AssetService {
         return toResponse(asset);
     }
 
-    public List<AssetResponse> findByStatus(String status) {
+    public List<AssetResponse> findByStatus(AssetStatus status) {
         return assetRepository.findByStatus(status).stream()
                 .map(this::toResponse)
                 .toList();
@@ -41,13 +42,14 @@ public class AssetService {
             throw new RuntimeException("Asset code already exists: " + request.getAssetCode());
         }
 
-        Asset asset = new Asset();
-        asset.setAssetCode(request.getAssetCode());
-        asset.setName(request.getName());
-        asset.setDescription(request.getDescription());
-        asset.setCategory(request.getCategory());
-        asset.setStatus("AVAILABLE");
-        asset.setLocation(request.getLocation());
+        Asset asset = new Asset(
+                request.getAssetCode(),
+                request.getName(),
+                request.getDescription(),
+                request.getCategory(),
+                AssetStatus.AVAILABLE,
+                request.getLocation()
+        );
 
         Asset saved = assetRepository.save(asset);
         return toResponse(saved);
@@ -58,10 +60,23 @@ public class AssetService {
         Asset asset = assetRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Asset not found: " + id));
 
-        asset.setName(request.getName());
-        asset.setDescription(request.getDescription());
-        asset.setCategory(request.getCategory());
-        asset.setLocation(request.getLocation());
+        asset.updateDetails(
+                request.getName(),
+                request.getDescription(),
+                request.getCategory(),
+                request.getLocation()
+        );
+
+        Asset updated = assetRepository.save(asset);
+        return toResponse(updated);
+    }
+
+    @Transactional
+    public AssetResponse changeStatus(Long id, AssetStatus nextStatus) {
+        Asset asset = assetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Asset not found: " + id));
+
+        asset.changeStatus(nextStatus);
 
         Asset updated = assetRepository.save(asset);
         return toResponse(updated);
@@ -82,7 +97,7 @@ public class AssetService {
                 asset.getName(),
                 asset.getDescription(),
                 asset.getCategory(),
-                asset.getStatus(),
+                asset.getStatus().name(),
                 asset.getLocation(),
                 asset.getCreatedAt(),
                 asset.getUpdatedAt()

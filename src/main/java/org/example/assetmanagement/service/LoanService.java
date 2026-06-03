@@ -1,14 +1,17 @@
 package org.example.assetmanagement.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.assetmanagement.dto.*;
+import org.example.assetmanagement.dto.AssetResponse;
+import org.example.assetmanagement.dto.LoanRequest;
+import org.example.assetmanagement.dto.LoanResponse;
+import org.example.assetmanagement.dto.UserResponse;
 import org.example.assetmanagement.entity.Asset;
+import org.example.assetmanagement.entity.AssetStatus;
 import org.example.assetmanagement.entity.Loan;
 import org.example.assetmanagement.entity.User;
 import org.example.assetmanagement.repository.AssetRepository;
 import org.example.assetmanagement.repository.LoanRepository;
 import org.example.assetmanagement.repository.UserRepository;
-import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,27 +63,35 @@ public class LoanService {
         Asset asset = assetRepository.findById(request.getAssetId())
                 .orElseThrow(() -> new RuntimeException("Asset not found: " + request.getAssetId()));
 
-        if (!"AVAILABLE".equals(asset.getStatus())) {
+        if (asset.getStatus() != AssetStatus.AVAILABLE) {
             throw new RuntimeException("Asset is not available for loan");
+        }
+
+        if (request.getUserId() == null) {
+            throw new RuntimeException("User id is required");
         }
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found: " + request.getUserId()));
 
-        return getLoanResponse(request, asset, user);
+        return createLoanInternal(request, asset, user);
     }
 
     @Transactional
-    public void createLoanAsUser(LoanRequest request, String username, boolean admin) {
+    public LoanResponse createLoanAsUser(LoanRequest request, String username, boolean admin) {
         Asset asset = assetRepository.findById(request.getAssetId())
                 .orElseThrow(() -> new RuntimeException("Asset not found: " + request.getAssetId()));
 
-        if (!"AVAILABLE".equals(asset.getStatus())) {
+        if (asset.getStatus() != AssetStatus.AVAILABLE) {
             throw new RuntimeException("Asset is not available for loan");
         }
 
         User user;
         if (admin) {
+            if (request.getUserId() == null) {
+                throw new RuntimeException("User id is required");
+            }
+
             user = userRepository.findById(request.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found: " + request.getUserId()));
         } else {
@@ -88,11 +99,10 @@ public class LoanService {
                     .orElseThrow(() -> new RuntimeException("User not found: " + username));
         }
 
-        getLoanResponse(request, asset, user);
+        return createLoanInternal(request, asset, user);
     }
 
-    @NonNull
-    private LoanResponse getLoanResponse(LoanRequest request, Asset asset, User user) {
+    private LoanResponse createLoanInternal(LoanRequest request, Asset asset, User user) {
         Loan loan = new Loan();
         loan.setAsset(asset);
         loan.setUser(user);
@@ -101,7 +111,7 @@ public class LoanService {
         loan.setStatus("ACTIVE");
         loan.setRemarks(request.getRemarks());
 
-        asset.setStatus("LOANED");
+        asset.changeStatus(AssetStatus.LOANED);
         assetRepository.save(asset);
 
         Loan saved = loanRepository.save(loan);
@@ -113,7 +123,7 @@ public class LoanService {
         Loan loan = loanRepository.findById(loanId)
                 .orElseThrow(() -> new RuntimeException("Loan not found: " + loanId));
 
-        return toResponse(loan);
+        return returnLoanInternal(loan);
     }
 
     @Transactional
@@ -137,7 +147,7 @@ public class LoanService {
         loan.setStatus("RETURNED");
 
         Asset asset = loan.getAsset();
-        asset.setStatus("AVAILABLE");
+        asset.changeStatus(AssetStatus.AVAILABLE);
         assetRepository.save(asset);
 
         Loan updated = loanRepository.save(loan);
@@ -151,7 +161,7 @@ public class LoanService {
                 loan.getAsset().getName(),
                 loan.getAsset().getDescription(),
                 loan.getAsset().getCategory(),
-                loan.getAsset().getStatus(),
+                loan.getAsset().getStatus().name(),
                 loan.getAsset().getLocation(),
                 loan.getAsset().getCreatedAt(),
                 loan.getAsset().getUpdatedAt()
