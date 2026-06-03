@@ -3,6 +3,7 @@ package org.example.assetmanagement.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.dto.LoanRequest;
+import org.example.assetmanagement.entity.AssetStatus;
 import org.example.assetmanagement.service.AssetService;
 import org.example.assetmanagement.service.LoanService;
 import org.example.assetmanagement.service.UserService;
@@ -32,7 +33,7 @@ public class LoanPageController {
         boolean admin = hasRole(authentication);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("assets", assetService.findByStatus("AVAILABLE"));
+            model.addAttribute("assets", assetService.findByStatus(AssetStatus.AVAILABLE));
             model.addAttribute("users", userService.findAll());
             model.addAttribute("admin", admin);
             return "loans/new";

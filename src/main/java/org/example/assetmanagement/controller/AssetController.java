@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.dto.AssetRequest;
 import org.example.assetmanagement.dto.AssetResponse;
 import org.example.assetmanagement.service.AssetService;
+import org.example.assetmanagement.entity.AssetStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class AssetController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<AssetResponse>> getAssetsByStatus(@PathVariable String status) {
+    public ResponseEntity<List<AssetResponse>> getAssetsByStatus(@PathVariable AssetStatus status) {
         return ResponseEntity.ok(assetService.findByStatus(status));
     }
 

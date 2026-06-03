@@ -2,6 +2,7 @@ package org.example.assetmanagement.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.dto.LoanRequest;
+import org.example.assetmanagement.entity.AssetStatus;
 import org.example.assetmanagement.service.AssetService;
 import org.example.assetmanagement.service.LoanService;
 import org.example.assetmanagement.service.UserService;
@@ -65,7 +66,7 @@ public class ViewController {
         boolean admin = hasRole(authentication);
 
         model.addAttribute("loanRequest", new LoanRequest());
-        model.addAttribute("assets", assetService.findByStatus("AVAILABLE"));
+        model.addAttribute("assets", assetService.findByStatus(AssetStatus.AVAILABLE));
         model.addAttribute("users", userService.findAll());
         model.addAttribute("admin", admin);
 
