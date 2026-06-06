@@ -22,13 +22,13 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("Admin_dev_2026!"));
-        admin.setEmail("admin@example.com");
-        admin.setFullName("管理者");
-        admin.setRole("ADMIN");
-        admin.setActive(true);
+        User admin = new User(
+                "admin",
+                passwordEncoder.encode("Admin_dev_2026!"),
+                "admin@example.com",
+                "管理者",
+                "ADMIN"
+        );
 
         userRepository.save(admin);
     }
