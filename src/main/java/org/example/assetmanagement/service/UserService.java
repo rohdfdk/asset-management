@@ -47,13 +47,13 @@ public class UserService {
             throw new RuntimeException("Email already exists: " + request.getEmail());
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
-        user.setFullName(request.getFullName());
-        user.setRole(request.getRole());
-        user.setActive(true);
+        User user = new User(
+                request.getUsername(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getEmail(),
+                request.getFullName(),
+                request.getRole()
+        );
 
         User saved = userRepository.save(user);
         return toResponse(saved);
@@ -76,13 +76,15 @@ public class UserService {
             throw new RuntimeException("Email already exists: " + request.getEmail());
         }
 
-        user.setUsername(request.getUsername());
+        user.updateProfile(
+                request.getUsername(),
+                request.getEmail(),
+                request.getFullName(),
+                request.getRole()
+        );
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-             user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.updatePassword(passwordEncoder.encode(request.getPassword()));
         }
-        user.setEmail(request.getEmail());
-        user.setFullName(request.getFullName());
-        user.setRole(request.getRole());
 
         User updated = userRepository.save(user);
         return toResponse(updated);
@@ -101,7 +103,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found: " + id));
 
-        user.setActive(false);
+        user.deactivate();
         User updated = userRepository.save(user);
         return toResponse(updated);
     }
@@ -111,7 +113,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found: " + id));
 
-        user.setActive(true);
+        user.activate();
         User updated = userRepository.save(user);
         return toResponse(updated);
     }
