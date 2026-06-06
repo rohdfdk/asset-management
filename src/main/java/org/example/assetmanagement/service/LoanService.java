@@ -46,14 +46,15 @@ public class LoanService {
     }
 
     public List<LoanResponse> findActiveLoans() {
-        return loanRepository.findByStatus("ACTIVE").stream()
+        return loanRepository.findByStatus(Loan.STATUS_ACTIVE).stream()
                 .map(this::toResponse)
                 .toList();
     }
 
     public List<LoanResponse> findOverdueLoans() {
         LocalDate today = LocalDate.now();
-        return loanRepository.findByStatusAndExpectedReturnDateBefore("ACTIVE", today).stream()
+        return loanRepository.findByStatusAndExpectedReturnDateBefore(Loan.STATUS_ACTIVE, today).stream()
+                .peek(loan -> loan.markOverdueIfNeeded(today))
                 .map(this::toResponse)
                 .toList();
     }
@@ -103,13 +104,13 @@ public class LoanService {
     }
 
     private LoanResponse createLoanInternal(LoanRequest request, Asset asset, User user) {
-        Loan loan = new Loan();
-        loan.setAsset(asset);
-        loan.setUser(user);
-        loan.setLoanDate(request.getLoanDate());
-        loan.setExpectedReturnDate(request.getExpectedReturnDate());
-        loan.setStatus("ACTIVE");
-        loan.setRemarks(request.getRemarks());
+        Loan loan = new Loan(
+                asset,
+                user,
+                request.getLoanDate(),
+                request.getExpectedReturnDate(),
+                request.getRemarks()
+        );
 
         asset.changeStatus(AssetStatus.LOANED);
         assetRepository.save(asset);
@@ -139,12 +140,7 @@ public class LoanService {
     }
 
     private LoanResponse returnLoanInternal(Loan loan) {
-        if (!"ACTIVE".equals(loan.getStatus())) {
-            throw new RuntimeException("Loan is not active");
-        }
-
-        loan.setActualReturnDate(LocalDate.now());
-        loan.setStatus("RETURNED");
+        loan.returnAsset(LocalDate.now());
 
         Asset asset = loan.getAsset();
         asset.changeStatus(AssetStatus.AVAILABLE);
