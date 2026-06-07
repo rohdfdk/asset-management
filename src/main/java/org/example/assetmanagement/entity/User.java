@@ -34,8 +34,9 @@ public class User {
     @Column(nullable = false, length = 20)
     private String role; // ADMIN, USER
 
-    @Column(nullable = false)
-    private Boolean active = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserStatus status = UserStatus.ACTIVE;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
@@ -57,7 +58,6 @@ public class User {
         this.email = validateRequiredAndLength(email, "email", 100);
         this.fullName = validateRequiredAndLength(fullName, "fullName", 50);
         this.role = validateRequiredAndLength(role, "role", 20);
-        this.active = true;
     }
 
     public void updateProfile(String username, String email, String fullName, String role) {
@@ -72,11 +72,20 @@ public class User {
     }
 
     public void deactivate() {
-        this.active = false;
+        changeStatus(UserStatus.INACTIVE);
     }
 
     public void activate() {
-        this.active = true;
+        changeStatus(UserStatus.ACTIVE);
+    }
+
+    private void changeStatus(UserStatus nextStatus) {
+        if (!this.status.canTransitTo(nextStatus)) {
+            throw new IllegalStateException(
+                    "Invalid user status transition: " + this.status + " -> " + nextStatus
+            );
+        }
+        this.status = nextStatus;
     }
 
     private static String validateRequiredAndLength(String value, String fieldName, int maxLength) {
