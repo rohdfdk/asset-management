@@ -31,7 +31,7 @@ class LoanTest {
             assertEquals(user, loan.getUser());
             assertEquals(loanDate, loan.getLoanDate());
             assertEquals(expectedReturnDate, loan.getExpectedReturnDate());
-            assertEquals(Loan.STATUS_ACTIVE, loan.getStatus());
+            assertEquals(LoanStatus.ACTIVE, loan.getStatus());
             assertEquals("備考", loan.getRemarks());
         }
 
@@ -58,7 +58,7 @@ class LoanTest {
             loan.returnAsset(returnDate);
 
             assertEquals(returnDate, loan.getActualReturnDate());
-            assertEquals(Loan.STATUS_RETURNED, loan.getStatus());
+            assertEquals(LoanStatus.RETURNED, loan.getStatus());
         }
 
         @Test
@@ -100,7 +100,7 @@ class LoanTest {
 
             loan.markOverdueIfNeeded(LocalDate.now());
 
-            assertEquals(Loan.STATUS_OVERDUE, loan.getStatus());
+            assertEquals(LoanStatus.OVERDUE, loan.getStatus());
             assertTrue(loan.isOverdue(LocalDate.now()));
         }
 

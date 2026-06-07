@@ -8,6 +8,7 @@ import org.example.assetmanagement.dto.UserResponse;
 import org.example.assetmanagement.entity.Asset;
 import org.example.assetmanagement.entity.AssetStatus;
 import org.example.assetmanagement.entity.Loan;
+import org.example.assetmanagement.entity.LoanStatus;
 import org.example.assetmanagement.entity.User;
 import org.example.assetmanagement.repository.AssetRepository;
 import org.example.assetmanagement.repository.LoanRepository;
@@ -46,14 +47,14 @@ public class LoanService {
     }
 
     public List<LoanResponse> findActiveLoans() {
-        return loanRepository.findByStatus(Loan.STATUS_ACTIVE).stream()
+        return loanRepository.findByStatus(LoanStatus.ACTIVE).stream()
                 .map(this::toResponse)
                 .toList();
     }
 
     public List<LoanResponse> findOverdueLoans() {
         LocalDate today = LocalDate.now();
-        return loanRepository.findByStatusAndExpectedReturnDateBefore(Loan.STATUS_ACTIVE, today).stream()
+        return loanRepository.findByStatusAndExpectedReturnDateBefore(LoanStatus.ACTIVE, today).stream()
                 .peek(loan -> loan.markOverdueIfNeeded(today))
                 .map(this::toResponse)
                 .toList();
@@ -181,7 +182,7 @@ public class LoanService {
                 loan.getLoanDate(),
                 loan.getExpectedReturnDate(),
                 loan.getActualReturnDate(),
-                loan.getStatus(),
+                loan.getStatus().name(),
                 loan.getRemarks(),
                 loan.getCreatedAt(),
                 loan.getUpdatedAt()
