@@ -12,6 +12,22 @@ import static org.assertj.core.api.Assertions.*;
 class UserTest {
 
     @Nested
+    @DisplayName("UserStatusの遷移チェック")
+    class UserStatusTest {
+
+        @Test
+        void canTransitTo_次のステータスにnullを指定した場合_falseを返す() {
+            // ACTIVE状態からnullへの遷移チェック
+            boolean resultFromActive = UserStatus.ACTIVE.canTransitTo(null);
+            assertThat(resultFromActive).isFalse();
+
+            // INACTIVE状態からnullへの遷移チェック
+            boolean resultFromInactive = UserStatus.INACTIVE.canTransitTo(null);
+            assertThat(resultFromInactive).isFalse();
+        }
+    }
+
+    @Nested
     @DisplayName("constructor")
     class ConstructorTest {
 
@@ -108,7 +124,6 @@ class UserTest {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
             user.deactivate(); // 1回目で INACTIVE にする
 
-            // 例外メッセージの包含条件（contains）も綺麗にチェーンできます
             assertThatIllegalStateException()
                     .isThrownBy(user::deactivate)
                     .withMessageContaining("Invalid user status transition");
@@ -131,6 +146,16 @@ class UserTest {
             assertThatIllegalStateException()
                     .isThrownBy(user::activate)
                     .withMessageContaining("Invalid user status transition");
+        }
+
+        @Test
+        void constructor_usernameが最大文字数を超えている場合_IllegalArgumentExceptionをスローする() {
+            int maxLength = 50;
+            String longUsername = "a".repeat(maxLength + 1);
+
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> new User(longUsername, "encoded-password", "john@example.com", "John Doe", "USER"))
+                    .withMessageContaining("must be between 1 and");
         }
     }
 }
