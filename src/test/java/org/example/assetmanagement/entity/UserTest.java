@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("User")
 class UserTest {
@@ -27,7 +24,7 @@ class UserTest {
             assertEquals("john@example.com", user.getEmail());
             assertEquals("John Doe", user.getFullName());
             assertEquals("USER", user.getRole());
-            assertTrue(user.getActive());
+            assertEquals(UserStatus.ACTIVE, user.getStatus());
         }
 
         @ParameterizedTest
@@ -70,26 +67,72 @@ class UserTest {
     }
 
     @Nested
-    @DisplayName("active")
+    @DisplayName("status")
     class ActiveTest {
 
         @Test
-        void deactivate_呼び出した場合_falseになる() {
+        void deactivate_呼び出した場合_INACTIVEになる() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
 
             user.deactivate();
 
-            assertFalse(user.getActive());
+            assertEquals(UserStatus.INACTIVE, user.getStatus());
         }
 
         @Test
-        void activate_呼び出した場合_trueになる() {
+        void activate_呼び出した場合_ACTIVEになる() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
             user.deactivate();
 
             user.activate();
 
-            assertTrue(user.getActive());
+            assertEquals(UserStatus.ACTIVE, user.getStatus());
+        }
+    }
+
+    @Nested
+    @DisplayName("status")
+    class StatusTest {
+
+        @Test
+        void deactivate_ACTIVE状態から呼び出した場合_INACTIVEになる() {
+            User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
+
+            user.deactivate();
+
+            assertEquals(UserStatus.INACTIVE, user.getStatus());
+        }
+
+        @Test
+        void deactivate_すでにINACTIVE状態から呼び出した場合_IllegalStateExceptionをスローする() {
+            User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
+            user.deactivate(); // 1回目で INACTIVE にする
+
+            // 2回目は遷移不可なので例外が発生することを検証
+            IllegalStateException exception = assertThrows(IllegalStateException.class, user::deactivate);
+
+            assertTrue(exception.getMessage().contains("Invalid user status transition"));
+        }
+
+        @Test
+        void activate_INACTIVE状態から呼び出した場合_ACTIVEになる() {
+            User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
+            user.deactivate();
+
+            user.activate();
+
+            assertEquals(UserStatus.ACTIVE, user.getStatus());
+        }
+
+        @Test
+        void activate_すでにACTIVE状態から呼び出した場合_IllegalStateExceptionをスローする() {
+            User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
+            // 初期状態がすでに対象の状態 (ACTIVE)
+
+            // 遷移不可なので例外が発生することを検証
+            IllegalStateException exception = assertThrows(IllegalStateException.class, user::activate);
+
+            assertTrue(exception.getMessage().contains("Invalid user status transition"));
         }
     }
 }

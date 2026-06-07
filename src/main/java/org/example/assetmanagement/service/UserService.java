@@ -125,7 +125,7 @@ public class UserService {
                 user.getEmail(),
                 user.getFullName(),
                 user.getRole(),
-                user.getActive(),
+                user.getStatus(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
