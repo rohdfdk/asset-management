@@ -18,10 +18,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Loan {
 
-    public static final String STATUS_ACTIVE = "ACTIVE";
-    public static final String STATUS_RETURNED = "RETURNED";
-    public static final String STATUS_OVERDUE = "OVERDUE";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,8 +38,9 @@ public class Loan {
 
     private LocalDate actualReturnDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status; // ACTIVE, RETURNED, OVERDUE
+    private LoanStatus status;
 
     @Column(length = 500)
     private String remarks;
@@ -70,32 +67,32 @@ public class Loan {
         this.user = user;
         this.loanDate = loanDate;
         this.expectedReturnDate = expectedReturnDate;
-        this.status = STATUS_ACTIVE;
+        this.status = LoanStatus.ACTIVE;
         this.remarks = remarks;
     }
 
     public void returnAsset(LocalDate returnDate) {
         validateRequired(returnDate, "returnDate");
 
-        if (!(STATUS_ACTIVE.equals(status) || STATUS_OVERDUE.equals(status))) {
+        if (!(LoanStatus.ACTIVE.equals(status) || LoanStatus.OVERDUE.equals(status))) {
             throw new IllegalStateException("Loan is not active");
         }
 
         this.actualReturnDate = returnDate;
-        this.status = STATUS_RETURNED;
+        this.status = LoanStatus.RETURNED;
     }
 
     public boolean isOverdue(LocalDate onDate) {
         validateRequired(onDate, "onDate");
-        return (STATUS_ACTIVE.equals(status) || STATUS_OVERDUE.equals(status))
+        return (LoanStatus.ACTIVE.equals(status) || LoanStatus.OVERDUE.equals(status))
                 && expectedReturnDate.isBefore(onDate);
     }
 
     public void markOverdueIfNeeded(LocalDate onDate) {
         validateRequired(onDate, "onDate");
 
-        if (STATUS_ACTIVE.equals(status) && expectedReturnDate.isBefore(onDate)) {
-            this.status = STATUS_OVERDUE;
+        if (LoanStatus.ACTIVE.equals(status) && expectedReturnDate.isBefore(onDate)) {
+            this.status = LoanStatus.OVERDUE;
         }
     }
 
