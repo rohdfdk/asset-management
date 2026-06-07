@@ -6,10 +6,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("User")
 class UserTest {
+
+    @Nested
+    @DisplayName("UserStatusの遷移チェック")
+    class UserStatusTest {
+
+        @Test
+        void canTransitTo_次のステータスにnullを指定した場合_falseを返す() {
+            // ACTIVE状態からnullへの遷移チェック
+            boolean resultFromActive = UserStatus.ACTIVE.canTransitTo(null);
+            assertThat(resultFromActive).isFalse();
+
+            // INACTIVE状態からnullへの遷移チェック
+            boolean resultFromInactive = UserStatus.INACTIVE.canTransitTo(null);
+            assertThat(resultFromInactive).isFalse();
+        }
+    }
 
     @Nested
     @DisplayName("constructor")
@@ -19,19 +35,19 @@ class UserTest {
         void constructor_有効な値を指定した場合_ユーザーを生成できる() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
 
-            assertEquals("john", user.getUsername());
-            assertEquals("encoded-password", user.getPassword());
-            assertEquals("john@example.com", user.getEmail());
-            assertEquals("John Doe", user.getFullName());
-            assertEquals("USER", user.getRole());
-            assertEquals(UserStatus.ACTIVE, user.getStatus());
+            assertThat(user.getUsername()).isEqualTo("john");
+            assertThat(user.getPassword()).isEqualTo("encoded-password");
+            assertThat(user.getEmail()).isEqualTo("john@example.com");
+            assertThat(user.getFullName()).isEqualTo("John Doe");
+            assertThat(user.getRole()).isEqualTo("USER");
+            assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         }
 
         @ParameterizedTest
         @NullAndEmptySource
         void constructor_usernameがnullまたは空の場合_IllegalArgumentExceptionをスローする(String invalidUsername) {
-            assertThrows(IllegalArgumentException.class,
-                    () -> new User(invalidUsername, "encoded-password", "john@example.com", "John Doe", "USER"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> new User(invalidUsername, "encoded-password", "john@example.com", "John Doe", "USER"));
         }
     }
 
@@ -45,10 +61,10 @@ class UserTest {
 
             user.updateProfile("john2", "john2@example.com", "John Doe 2", "ADMIN");
 
-            assertEquals("john2", user.getUsername());
-            assertEquals("john2@example.com", user.getEmail());
-            assertEquals("John Doe 2", user.getFullName());
-            assertEquals("ADMIN", user.getRole());
+            assertThat(user.getUsername()).isEqualTo("john2");
+            assertThat(user.getEmail()).isEqualTo("john2@example.com");
+            assertThat(user.getFullName()).isEqualTo("John Doe 2");
+            assertThat(user.getRole()).isEqualTo("ADMIN");
         }
     }
 
@@ -62,7 +78,7 @@ class UserTest {
 
             user.updatePassword("new-encoded-password");
 
-            assertEquals("new-encoded-password", user.getPassword());
+            assertThat(user.getPassword()).isEqualTo("new-encoded-password");
         }
     }
 
@@ -76,7 +92,7 @@ class UserTest {
 
             user.deactivate();
 
-            assertEquals(UserStatus.INACTIVE, user.getStatus());
+            assertThat(user.getStatus()).isEqualTo(UserStatus.INACTIVE);
         }
 
         @Test
@@ -86,7 +102,7 @@ class UserTest {
 
             user.activate();
 
-            assertEquals(UserStatus.ACTIVE, user.getStatus());
+            assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         }
     }
 
@@ -100,7 +116,7 @@ class UserTest {
 
             user.deactivate();
 
-            assertEquals(UserStatus.INACTIVE, user.getStatus());
+            assertThat(user.getStatus()).isEqualTo(UserStatus.INACTIVE);
         }
 
         @Test
@@ -108,10 +124,9 @@ class UserTest {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
             user.deactivate(); // 1回目で INACTIVE にする
 
-            // 2回目は遷移不可なので例外が発生することを検証
-            IllegalStateException exception = assertThrows(IllegalStateException.class, user::deactivate);
-
-            assertTrue(exception.getMessage().contains("Invalid user status transition"));
+            assertThatIllegalStateException()
+                    .isThrownBy(user::deactivate)
+                    .withMessageContaining("Invalid user status transition");
         }
 
         @Test
@@ -121,18 +136,26 @@ class UserTest {
 
             user.activate();
 
-            assertEquals(UserStatus.ACTIVE, user.getStatus());
+            assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         }
 
         @Test
         void activate_すでにACTIVE状態から呼び出した場合_IllegalStateExceptionをスローする() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
-            // 初期状態がすでに対象の状態 (ACTIVE)
 
-            // 遷移不可なので例外が発生することを検証
-            IllegalStateException exception = assertThrows(IllegalStateException.class, user::activate);
+            assertThatIllegalStateException()
+                    .isThrownBy(user::activate)
+                    .withMessageContaining("Invalid user status transition");
+        }
 
-            assertTrue(exception.getMessage().contains("Invalid user status transition"));
+        @Test
+        void constructor_usernameが最大文字数を超えている場合_IllegalArgumentExceptionをスローする() {
+            int maxLength = 50;
+            String longUsername = "a".repeat(maxLength + 1);
+
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> new User(longUsername, "encoded-password", "john@example.com", "John Doe", "USER"))
+                    .withMessageContaining("must be between 1 and");
         }
     }
 }
