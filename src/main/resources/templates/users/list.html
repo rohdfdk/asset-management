@@ -22,7 +22,7 @@
             <tbody>
             <tr th:each="user : ${users}">
                 <td th:text="${user.id}">1</td>
-                <td th:text="${user.username}">tanaka</td>
+                <td th:text="${user.username}">k.tanaka</td>
                 <td th:text="${user.fullName}">田中太郎</td>
                 <td th:text="${user.email}">tanaka@example.com</td>
                 <td>
@@ -34,8 +34,8 @@
                 </td>
                 <td>
                     <span class="badge"
-                          th:classappend="${user.active} ? ' text-bg-success' : ' text-bg-secondary'"
-                          th:text="${user.active} ? '有効' : '無効'">
+                          th:classappend="${user.status == 'ACTIVE'} ? ' text-bg-success' : ' text-bg-secondary'"
+                          th:text="${user.status == 'ACTIVE'} ? '有効' : '無効'">
                         有効
                     </span>
                 </td>

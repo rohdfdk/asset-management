@@ -3,6 +3,7 @@ package org.example.assetmanagement.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.assetmanagement.entity.UserStatus;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ public class UserResponse {
     private String email;
     private String fullName;
     private String role;
-    private Boolean active;
+    private UserStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

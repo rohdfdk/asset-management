@@ -169,7 +169,7 @@ public class LoanService {
                 loan.getUser().getEmail(),
                 loan.getUser().getFullName(),
                 loan.getUser().getRole(),
-                loan.getUser().getActive(),
+                loan.getUser().getStatus(),
                 loan.getUser().getCreatedAt(),
                 loan.getUser().getUpdatedAt()
         );

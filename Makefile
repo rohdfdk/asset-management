@@ -1,4 +1,4 @@
-.PHONY: help db-up db-down db-logs db-clean init-data init-users init-assets init-loans test-api
+.PHONY: help db-up db-down db-logs db-clean db-fresh
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
@@ -17,18 +17,20 @@ COMPOSE_FILE = compose.yaml
 ## ヘルプ表示
 help:
 	@echo "$(COLOR_GREEN)初期データ投入:$(COLOR_RESET)"
-	@echo "  make init-data    - 全ての初期データを投入"
 	@echo "  make init-data-sql - SQLで開発用初期データを投入"
-	@echo "  make init-users   - ユーザーデータを投入"
-	@echo "  make init-assets  - 資産データを投入"
-	@echo "  make init-loans   - 貸出データを投入"
+	@echo "$(COLOR_BLUE)使用可能なコマンド一覧:$(COLOR_RESET)"
+	@echo "  make db-up        - PostgreSQLコンテナを起動 (バックグラウンド)"
+	@echo "  make db-down      - PostgreSQLコンテナを停止"
+	@echo "  make db-logs      - PostgreSQLのリアルタイムログを表示"
+	@echo "  make db-clean     - PostgreSQLコンテナとボリューム(データ)を完全に削除"
+	@echo "  make db-fresh  - ボリュームを削除してクリーンな状態で再起動 (マイグレーション再実行用)"
 
 ## Docker関連コマンド
 
 # PostgreSQLコンテナを起動
 db-up:
 	@echo "$(COLOR_BLUE)PostgreSQLコンテナを起動中...$(COLOR_RESET)"
-	docker compose -f $(COMPOSE_FILE) up -d
+	docker compose -f $(COMPOSE_FILE) up -d --build
 	@echo "$(COLOR_GREEN)✓ PostgreSQLが起動しました$(COLOR_RESET)"
 	@sleep 3
 	docker compose ps
@@ -49,6 +51,11 @@ db-clean:
 	docker compose -f $(COMPOSE_FILE) down -v
 	@echo "$(COLOR_GREEN)✓ クリーンアップが完了しました$(COLOR_RESET)"
 
+# 既存のタスクの下などに追加
+db-fresh:
+	@make db-clean
+	@make db-up
+
 ## 初期データ投入
 
 # SQLで開発用初期データを投入
@@ -56,23 +63,3 @@ init-data-sql:
 	@echo "$(COLOR_BLUE)SQLで開発用初期データを投入中...$(COLOR_RESET)"
 	docker compose -f $(COMPOSE_FILE) exec -T postgres psql -U loan_user -d loan_db < docs/dev-seed.sql
 	@echo "$(COLOR_GREEN)✓ SQLでの初期データ投入が完了しました$(COLOR_RESET)"
-
-## API動作確認
-
-# jqでAPIの動作確認
-test-api:
-	@echo "$(COLOR_BLUE)=== DB接続確認 ===$(COLOR_RESET)"
-	@curl -s $(API_URL)/health/db | jq .
-	@echo ""
-	@echo "$(COLOR_BLUE)=== ユーザー一覧 ===$(COLOR_RESET)"
-	@curl -s $(API_URL)/users | jq '.[] | {id, username, fullName, role}'
-	@echo ""
-	@echo "$(COLOR_BLUE)=== 資産一覧（利用可能） ===$(COLOR_RESET)"
-	@curl -s $(API_URL)/assets/status/AVAILABLE | jq '.[] | {id, assetCode, name, status}'
-	@echo ""
-	@echo "$(COLOR_BLUE)=== 資産一覧（貸出中） ===$(COLOR_RESET)"
-	@curl -s $(API_URL)/assets/status/LOANED | jq '.[] | {id, assetCode, name, status}'
-	@echo ""
-	@echo "$(COLOR_BLUE)=== 貸出中一覧 ===$(COLOR_RESET)"
-	@curl -s $(API_URL)/loans/active | jq '.[] | {id, asset: .asset.name, user: .user.fullName, loanDate, expectedReturnDate}'
-	@echo ""

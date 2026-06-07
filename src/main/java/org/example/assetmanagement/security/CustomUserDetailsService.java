@@ -2,6 +2,7 @@ package org.example.assetmanagement.security;
 
 import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.entity.User;
+import org.example.assetmanagement.entity.UserStatus;
 import org.example.assetmanagement.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Boolean.TRUE.equals(user.getActive()),
+                user.getStatus() == UserStatus.ACTIVE,
                 true,
                 true,
                 true,
