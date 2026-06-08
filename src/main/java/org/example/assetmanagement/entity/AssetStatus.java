@@ -17,7 +17,8 @@ public enum AssetStatus {
                     || nextStatus == RETIRED;
             case LOANED -> nextStatus == AVAILABLE
                     || nextStatus == MAINTENANCE;
-            case MAINTENANCE -> nextStatus == AVAILABLE;
+            case MAINTENANCE -> nextStatus == AVAILABLE
+                    || nextStatus == RETIRED;
             case RETIRED -> false;
         };
     }
