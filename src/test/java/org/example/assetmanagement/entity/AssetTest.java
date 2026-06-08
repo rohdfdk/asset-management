@@ -349,19 +349,23 @@ class AssetTest {
         @Nested
         class MAINTENANCEからの遷移 {
 
-            @Test
-            void changeStatus_MAINTENANCEからAVAILABLEの場合_状態変更できる() {
+            @ParameterizedTest
+            @EnumSource(
+                    value = AssetStatus.class,
+                    names = {"AVAILABLE", "RETIRED"}
+            )
+            void changeStatus_MAINTENANCEから許可された状態の場合_状態変更できる(AssetStatus nextStatus) {
                 Asset asset = maintenanceAsset();
 
-                asset.changeStatus(AssetStatus.AVAILABLE);
+                asset.changeStatus(nextStatus);
 
-                assertThat(asset.getStatus()).isEqualTo(AssetStatus.AVAILABLE);
+                assertThat(asset.getStatus()).isEqualTo(nextStatus);
             }
 
             @ParameterizedTest
             @EnumSource(
                     value = AssetStatus.class,
-                    names = {"LOANED", "MAINTENANCE", "RETIRED"}
+                    names = {"LOANED", "MAINTENANCE"}
             )
             void changeStatus_MAINTENANCEから許可されていない状態の場合_IllegalStateExceptionをスローする(AssetStatus nextStatus) {
                 Asset asset = maintenanceAsset();
