@@ -9,7 +9,7 @@ erDiagram
         VARCHAR(100) email "NOT NULL"
         VARCHAR(50) full_name "NOT NULL"
         VARCHAR(20) role "NOT NULL, ADMIN/USER"
-        BOOLEAN active "NOT NULL, DEFAULT true"
+        VARCHAR(20) status "NOT NULL, DEFAULT 'ACTIVE"
         TIMESTAMP created_at "NOT NULL"
         TIMESTAMP updated_at "NOT NULL"
     }
