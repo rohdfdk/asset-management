@@ -1,0 +1,14 @@
+stateDiagram-v2
+    [*] --> AVAILABLE : 資産登録
+
+    AVAILABLE --> LOANED : 貸出登録
+    AVAILABLE --> MAINTENANCE : メンテ開始
+    AVAILABLE --> RETIRED : 廃棄
+
+    LOANED --> AVAILABLE : 返却
+    LOANED --> MAINTENANCE : 故障・メンテ
+
+    MAINTENANCE --> AVAILABLE : メンテ完了
+    MAINTENANCE --> RETIRED : 修理不能・廃棄
+
+    RETIRED --> [*] : 終了状態（遷移不可）
