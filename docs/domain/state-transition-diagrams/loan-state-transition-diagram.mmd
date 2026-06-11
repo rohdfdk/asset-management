@@ -1,0 +1,9 @@
+stateDiagram-v2
+    [*] --> ACTIVE: 貸出登録
+
+    ACTIVE --> RETURNED: 返却
+    ACTIVE --> OVERDUE: 返却予定日超過
+
+    OVERDUE --> RETURNED: 延滞後に返却
+
+    RETURNED --> [*]

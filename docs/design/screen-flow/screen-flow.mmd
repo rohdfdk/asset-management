@@ -1,0 +1,35 @@
+stateDiagram-v2
+    [*] --> Dashboard
+
+    Dashboard --> AssetList: 資産一覧
+    Dashboard --> UserList: ユーザー一覧
+    Dashboard --> LoanList: 貸出一覧
+    Dashboard --> LoanNew: 貸出登録
+
+    AssetList --> Dashboard: 戻る
+    UserList --> Dashboard: 戻る
+    LoanList --> Dashboard: 戻る
+
+    LoanList --> LoanNew: 貸出登録
+    LoanNew --> LoanList: 登録
+    LoanNew --> LoanList: キャンセル
+
+    LoanList --> LoanList: 返却処理
+
+    %% 各状態（画面）に対するビジネスルールの注記（NOTE）
+    note right of UserList
+        🔒 管理者（ROLE_ADMIN）専用
+        一般ユーザーには非表示
+    note
+
+    note left of LoanList
+        👤 認可に応じたデータ制御
+        ・管理者は全件閲覧
+        ・一般は自身の貸出のみ
+    note
+
+    note right of LoanNew
+        🛡️ 安全なバリデーション
+        ログイン中の本人名義でのみ
+        登録が許可される
+    note

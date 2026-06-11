@@ -1,0 +1,5 @@
+stateDiagram-v2
+    [*] --> ACTIVE : 初期状態
+    
+    ACTIVE --> INACTIVE : canTransitTo(INACTIVE) == true
+    INACTIVE --> ACTIVE : canTransitTo(ACTIVE) == true
