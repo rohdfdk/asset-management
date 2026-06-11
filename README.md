@@ -28,9 +28,11 @@
 * **フルアクセス権限:** ユーザー一覧や資産の全件管理など、管理者専用のコンポーネントが認可制御によって正しく表示されます。
 
 ### 2. 一般ユーザー用画面
-<img src="docs/design/screen-flow/dashboard-user.png" width="32%" alt="一般ユーザー画面">
-<img src="docs/design/screen-flow/loanlist-user.png" width="32%" alt="貸出一覧画面">
-<img src="docs/design/screen-flow/loannew-user.png" width="32%" alt="貸出申請画面">
+<div style="display: flex; justify-content: space-between;">
+    <img src="docs/design/screen-flow/dashboard-user.png" width="32%" alt="一般ユーザー画面">
+    <img src="docs/design/screen-flow/loanlist-user.png" width="32%" alt="貸出一覧画面">
+    <img src="docs/design/screen-flow/loannew-user.png" width="32%" alt="貸出申請画面">
+</div>
 
 * **最小権限の原則（PoLP）:** 認可制御により、一般ユーザーには不要な管理用メニューや機密項目が非表示となり、自身の貸出・返却リクエストに特化したシンプルなUIに切り替わります。
 
@@ -58,22 +60,11 @@ stateDiagram-v2
     LoanList --> LoanList: 返却処理
 
     %% 各状態（画面）に対するビジネスルールの注記（NOTE）
-    note right of UserList
-        🔒 管理者（ROLE_ADMIN）専用
-        一般ユーザーには非表示
-    note
+    note right of UserList : 🔒 管理者（ROLE_ADMIN）専用<br>一般ユーザーには非表示
 
-    note left of LoanList
-        👤 認可に応じたデータ制御
-        ・管理者は全件閲覧
-        ・一般は自身の貸出のみ
-    note
+    note left of LoanList : 👤 認可に応じたデータ制御<br>・管理者は全件閲覧<br>・一般は自身の貸出のみ
 
-    note right of LoanNew
-        🛡️ 安全なバリデーション
-        ログイン中の本人名義でのみ
-        登録が許可される
-    note
+    note right of LoanNew : 🛡️ 安全なバリデーション<br>ログイン中の本人名義でのみ<br>登録が許可される
 ```
 ---
 
