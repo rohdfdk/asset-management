@@ -111,7 +111,7 @@ stateDiagram-v2
 
 * 📄 **[資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)** - 業務の核となる、厳格な状態制御を可視化したメインの遷移図です。
 * 📁 **その他詳細な状態遷移:**
-  アプリ内の各エンティティに関する、より[細かい仕様は各ファイルを参照してください](docs/state-transition-diagrams/)。
+  アプリ内の各エンティティに関する、より[細かい仕様は各ファイルを参照してください](docs/domain/state-transition-diagrams/)。
 
 ---
 
