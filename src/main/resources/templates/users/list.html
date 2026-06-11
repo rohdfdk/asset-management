@@ -34,8 +34,8 @@
                 </td>
                 <td>
                     <span class="badge"
-                          th:classappend="${user.status == 'ACTIVE'} ? ' text-bg-success' : ' text-bg-secondary'"
-                          th:text="${user.status == 'ACTIVE'} ? '有効' : '無効'">
+                          th:classappend="${user.status.name() == 'ACTIVE'} ? ' text-bg-success' : ' text-bg-secondary'"
+                          th:text="${user.status.name() == 'ACTIVE'} ? '有効' : '無効'">
                         有効
                     </span>
                 </td>

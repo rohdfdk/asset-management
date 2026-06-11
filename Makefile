@@ -16,9 +16,8 @@ COMPOSE_FILE = compose.yaml
 
 ## ヘルプ表示
 help:
-	@echo "$(COLOR_GREEN)初期データ投入:$(COLOR_RESET)"
-	@echo "  make init-data-sql - SQLで開発用初期データを投入"
 	@echo "$(COLOR_BLUE)使用可能なコマンド一覧:$(COLOR_RESET)"
+	@echo "  make init-data-sql - SQLで開発用初期データを投入"
 	@echo "  make db-up        - PostgreSQLコンテナを起動 (バックグラウンド)"
 	@echo "  make db-down      - PostgreSQLコンテナを停止"
 	@echo "  make db-logs      - PostgreSQLのリアルタイムログを表示"
