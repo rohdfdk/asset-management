@@ -1,0 +1,12 @@
+# このファイルを application-local.yaml にコピーして使用
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_db
+    username: loan_user
+    password: your_local_db_password
+
+app:
+  seed:
+    admin:
+      username: admin
+      password: your_local_admin_password
