@@ -3,6 +3,7 @@ package org.example.assetmanagement.config;
 import lombok.RequiredArgsConstructor;
 import org.example.assetmanagement.entity.User;
 import org.example.assetmanagement.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,17 +17,27 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.seed.admin.username:admin}")
+    private String adminUsername;
+
+    @Value("${app.seed.admin.password:}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) {
-        if (userRepository.existsByUsername("admin")) {
+        if (userRepository.findByUsername(adminUsername).isPresent()) {
+            return;
+        }
+
+        if (adminPassword == null || adminPassword.isBlank()) {
             return;
         }
 
         User admin = new User(
-                "admin",
-                passwordEncoder.encode("Admin_dev_2026!"),
-                "admin@example.com",
-                "管理者",
+                adminUsername,
+                passwordEncoder.encode(adminPassword),
+                "admin@example.local",
+                "System Admin",
                 "ADMIN"
         );
 

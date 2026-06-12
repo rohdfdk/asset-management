@@ -41,3 +41,6 @@ Thumbs.db
 /nbdist/
 /.nb-gradle/
 build/
+
+# local-only Spring config (contains secrets)
+src/main/resources/application-local.yaml

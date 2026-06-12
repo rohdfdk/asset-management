@@ -1,15 +1,14 @@
 spring:
   application:
     name: asset-management
-
   profiles:
     active: dev
 
   # 1. データベース接続設定
   datasource:
-    url: jdbc:postgresql://localhost:5432/loan_db
-    username: loan_user
-    password: REDACTED
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/loan_db}
+    username: ${DB_USERNAME:loan_user}
+    password: ${DB_PASSWORD:change-me}
     driver-class-name: org.postgresql.Driver
 
   # 2. JPAの設定
@@ -25,3 +24,10 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+
+# 初期管理者設定
+app:
+  seed:
+    admin:
+      username: ${SEED_ADMIN_USERNAME:admin}
+      password: ${SEED_ADMIN_PASSWORD:}
