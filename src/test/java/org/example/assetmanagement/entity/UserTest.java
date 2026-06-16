@@ -120,13 +120,13 @@ class UserTest {
         }
 
         @Test
-        void deactivate_すでにINACTIVE状態から呼び出した場合_IllegalStateExceptionをスローする() {
+        void deactivate_すでにINACTIVE状態から呼び出した場合_状態はINACTIVEのまま() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
             user.deactivate(); // 1回目で INACTIVE にする
 
-            assertThatIllegalStateException()
-                    .isThrownBy(user::deactivate)
-                    .withMessageContaining("Invalid user status transition");
+            user.deactivate();
+
+            assertThat(user.getStatus()).isEqualTo(UserStatus.INACTIVE);
         }
 
         @Test
@@ -140,12 +140,12 @@ class UserTest {
         }
 
         @Test
-        void activate_すでにACTIVE状態から呼び出した場合_IllegalStateExceptionをスローする() {
+        void activate_すでにACTIVE状態から呼び出した場合_状態はACTIVEのまま() {
             User user = new User("john", "encoded-password", "john@example.com", "John Doe", "USER");
 
-            assertThatIllegalStateException()
-                    .isThrownBy(user::activate)
-                    .withMessageContaining("Invalid user status transition");
+            user.activate();
+
+            assertThat(user.getStatus()).isEqualTo(UserStatus.ACTIVE);
         }
 
         @Test
