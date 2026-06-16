@@ -98,13 +98,16 @@ class LoanTest {
         }
 
         @Test
-        void returnAsset_RETURNEDの場合_IllegalStateExceptionをスローする() {
+        void returnAsset_RETURNEDの場合_状態が変わらない() {
             Loan loan = createActiveLoan();
-            loan.returnAsset(LocalDate.now()); // 一度返却してRETURNEDにする
+            LocalDate firstReturnDate = LocalDate.now();
+            LocalDate secondReturnDate = firstReturnDate.plusDays(1);
 
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> loan.returnAsset(LocalDate.now().plusDays(1)))
-                    .withMessage("Loan is not active");
+            loan.returnAsset(firstReturnDate); // 一度返却してRETURNEDにする
+            loan.returnAsset(secondReturnDate); // 再実行しても変更されない
+
+            assertThat(loan.getActualReturnDate()).isEqualTo(firstReturnDate);
+            assertThat(loan.getStatus()).isEqualTo(LoanStatus.RETURNED);
         }
 
         @Test

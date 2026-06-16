@@ -289,12 +289,12 @@ class AssetTest {
             }
 
             @Test
-            void changeStatus_AVAILABLEからAVAILABLEの場合_IllegalStateExceptionをスローする() {
+            void changeStatus_AVAILABLEからAVAILABLEの場合_状態は変わらない() {
                 Asset asset = availableAsset();
 
-                assertThatThrownBy(() -> asset.changeStatus(AssetStatus.AVAILABLE))
-                        .isInstanceOf(IllegalStateException.class)
-                        .hasMessage("Invalid asset status transition: AVAILABLE -> AVAILABLE");
+                asset.changeStatus(AssetStatus.AVAILABLE);
+
+                assertThat(asset.getStatus()).isEqualTo(AssetStatus.AVAILABLE);
             }
 
             @Test
@@ -326,7 +326,7 @@ class AssetTest {
             @ParameterizedTest
             @EnumSource(
                     value = AssetStatus.class,
-                    names = {"LOANED", "RETIRED"}
+                    names = {"RETIRED"}
             )
             void changeStatus_LOANEDから許可されていない状態の場合_IllegalStateExceptionをスローする(AssetStatus nextStatus) {
                 Asset asset = loanedAsset();
@@ -334,6 +334,15 @@ class AssetTest {
                 assertThatThrownBy(() -> asset.changeStatus(nextStatus))
                         .isInstanceOf(IllegalStateException.class)
                         .hasMessage("Invalid asset status transition: LOANED -> " + nextStatus);
+            }
+
+            @Test
+            void changeStatus_LOANEDからLOANEDの場合_状態は変わらない() {
+                Asset asset = loanedAsset();
+
+                asset.changeStatus(AssetStatus.LOANED);
+
+                assertThat(asset.getStatus()).isEqualTo(AssetStatus.LOANED);
             }
 
             @Test
@@ -365,7 +374,7 @@ class AssetTest {
             @ParameterizedTest
             @EnumSource(
                     value = AssetStatus.class,
-                    names = {"LOANED", "MAINTENANCE"}
+                    names = {"LOANED"}
             )
             void changeStatus_MAINTENANCEから許可されていない状態の場合_IllegalStateExceptionをスローする(AssetStatus nextStatus) {
                 Asset asset = maintenanceAsset();
@@ -373,6 +382,15 @@ class AssetTest {
                 assertThatThrownBy(() -> asset.changeStatus(nextStatus))
                         .isInstanceOf(IllegalStateException.class)
                         .hasMessage("Invalid asset status transition: MAINTENANCE -> " + nextStatus);
+            }
+
+            @Test
+            void changeStatus_MAINTENANCEからMAINTENANCEの場合_状態は変わらない() {
+                Asset asset = maintenanceAsset();
+
+                asset.changeStatus(AssetStatus.MAINTENANCE);
+
+                assertThat(asset.getStatus()).isEqualTo(AssetStatus.MAINTENANCE);
             }
 
             @Test
@@ -389,13 +407,25 @@ class AssetTest {
         class RETIREDからの遷移 {
 
             @ParameterizedTest
-            @EnumSource(AssetStatus.class)
+            @EnumSource(
+                    value = AssetStatus.class,
+                    names = {"AVAILABLE", "LOANED", "MAINTENANCE"}
+            )
             void changeStatus_RETIREDから任意の状態の場合_IllegalStateExceptionをスローする(AssetStatus nextStatus) {
                 Asset asset = retiredAsset();
 
                 assertThatThrownBy(() -> asset.changeStatus(nextStatus))
                         .isInstanceOf(IllegalStateException.class)
                         .hasMessage("Invalid asset status transition: RETIRED -> " + nextStatus);
+            }
+
+            @Test
+            void changeStatus_RETIREDからRETIREDの場合_状態は変わらない() {
+                Asset asset = retiredAsset();
+
+                asset.changeStatus(AssetStatus.RETIRED);
+
+                assertThat(asset.getStatus()).isEqualTo(AssetStatus.RETIRED);
             }
 
             @Test
