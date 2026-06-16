@@ -95,6 +95,10 @@ public class Asset {
     }
 
     public void changeStatus(AssetStatus nextStatus) {
+        if (this.status == nextStatus) {
+            return;
+        }
+
         if (!this.status.canTransitTo(nextStatus)) {
             throw new IllegalStateException(
                     "Invalid asset status transition: " + this.status + " -> " + nextStatus
