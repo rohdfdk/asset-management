@@ -80,6 +80,10 @@ public class User {
     }
 
     private void changeStatus(UserStatus nextStatus) {
+        if (this.status == nextStatus) {
+            return;
+        }
+
         if (!this.status.canTransitTo(nextStatus)) {
             throw new IllegalStateException(
                     "Invalid user status transition: " + this.status + " -> " + nextStatus
