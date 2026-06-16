@@ -74,6 +74,10 @@ public class Loan {
     public void returnAsset(LocalDate returnDate) {
         validateRequired(returnDate, "returnDate");
 
+        if (LoanStatus.RETURNED.equals(status)) {
+            return;
+        }
+
         if (!(LoanStatus.ACTIVE.equals(status) || LoanStatus.OVERDUE.equals(status))) {
             throw new IllegalStateException("Loan is not active");
         }
