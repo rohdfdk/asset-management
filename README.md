@@ -62,11 +62,9 @@ stateDiagram-v2
     LoanList --> LoanList: 返却処理
 
     %% 各状態（画面）に対するビジネスルールの注記（NOTE）
-    note right of UserList : 🔒 管理者（ROLE_ADMIN）専用<br>一般ユーザーには非表示
-
-    note left of LoanList : 👤 認可に応じたデータ制御<br>・管理者は全件閲覧<br>・一般は自身の貸出のみ
-
-    note right of LoanNew : 🛡️ 安全なバリデーション<br>ログイン中の本人名義でのみ<br>登録が許可される
+    note right of UserList: 🔒 管理者 (ROLE_ADMIN) 専用<br/>一般ユーザーには非表示
+    note left of LoanList: 👤 認可に応じたデータ制御<br/>・管理者は全件閲覧<br/>・一般は自身の貸出のみ
+    note right of LoanNew: 🛡️ 安全なバリデーション<br/>ログイン中の本人名義でのみ<br/>登録が許可される
 ```
 ---
 
@@ -90,14 +88,14 @@ stateDiagram-v2
 
 ## 🛠 技術スタック
 
-| 分類 | 技術・ツール | 状態 / 備考 |
-| :--- | :--- | :--- |
-| **Backend** | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装 |
-| **Build** | Maven | |
-| **Database** | PostgreSQL | 開発環境: Docker Compose |
-| **Quality** | JUnit 5 / AssertJ / JaCoCo | 単体・結合テスト実行用 |
-| **CI/CD** | GitHub Actions | **近日期限でCI（自動テスト）構築予定** |
-| **Infra** | Google Cloud (Cloud Run) | **本番環境として検討中** |
+| 分類           | 技術・ツール                       | 状態 / 備考                         |
+|:-------------|:-----------------------------|:--------------------------------|
+| **Backend**  | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装                        |
+| **Build**    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
+| **Database** | PostgreSQL                   | 開発環境: Docker Compose            |
+| **Quality**  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
+| **CI/CD**    | GitHub Actions               | **近日期限でCI（自動テスト）構築予定**          |
+| **Infra**    | Google Cloud (Cloud Run)     | **本番環境として検討中**                  |
 
 ---
 
@@ -128,47 +126,11 @@ stateDiagram-v2
 
 ---
 
-## 🏁 ローカル環境での起動方法
+## 🏁 ローカル環境の開発ガイド
 
-### 前提条件
-* JDK 21 がインストールされていること
-* **Docker / Docker Compose** がインストールされ、起動していること（`make db-up` 用）
+### 🛠️ 前提条件
+* **Docker / Docker Compose** がインストールされ、起動していること
 
-### 1. リポジトリのクローンと移動
-```bash
-git clone [https://github.com/rohdfdk/asset-management.git](https://github.com/rohdfdk/asset-management.git)
-cd asset-management
-```
-### 2. データベースの起動
-```bash
-make db-up
-```
-### 3. ローカル環境用の設定ファイル作成
-本リポジトリはセキュリティ担保のため、パスワードのデフォルト値をソースコード（Git管理対象）に含めていません。
-リポジトリ内に用意されている `application-local.yaml.example` を活用し、以下の手順でローカル専用の設定ファイルを作成してください。
-
-1. サンプルファイルをコピーして `application-local.yaml` を作成します。
-```bash
-   cp src/main/resources/application-local.yaml.example src/main/resources/application-local.yaml
-```
-2. 作成した application-local.yaml を開き、任意のパスワードに書き換えます。
-```yaml
-spring:
-     datasource:
-       url: jdbc:postgresql://localhost:5432/loan_db
-       username: loan_user
-       password: your_local_db_password    # ← ローカル用のDBパスワードを入力
-   
-   app:
-     seed:
-       admin:
-         username: admin
-         password: your_local_admin_password # ← 初期管理者のローカル用パスワードを入力
-```
-### 4. アプリケーションの起動
-```bash
-# Windows (コマンドプロンプト / PowerShell)
-mvnw.cmd spring-boot:run
-# Linux / macOS
-./mvnw spring-boot:run
-```
+### 🚀 起動手順
+詳細な環境構築およびアプリケーションの起動手順については、以下のガイドを参照してください。
+👉 **[ローカル環境起動ガイド](docs/local-setup.md)**
