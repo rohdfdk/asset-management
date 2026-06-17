@@ -29,9 +29,8 @@ help:
 # PostgreSQLコンテナを起動
 db-up:
 	@echo "$(COLOR_BLUE)PostgreSQLコンテナを起動中...$(COLOR_RESET)"
-	docker compose -f $(COMPOSE_FILE) up -d --build
+	docker compose -f $(COMPOSE_FILE) up -d --build --wait
 	@echo "$(COLOR_GREEN)✓ PostgreSQLが起動しました$(COLOR_RESET)"
-	@sleep 3
 	docker compose ps
 
 # PostgreSQLコンテナを停止
@@ -50,7 +49,7 @@ db-clean:
 	docker compose -f $(COMPOSE_FILE) down -v
 	@echo "$(COLOR_GREEN)✓ クリーンアップが完了しました$(COLOR_RESET)"
 
-# 既存のタスクの下などに追加
+# マイグレーション再実行用の初期化処理　(Re-initialize DB & wait for migrations)
 db-fresh:
 	@make db-clean
 	@make db-up
