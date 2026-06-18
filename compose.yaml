@@ -4,7 +4,7 @@ services:
     environment:
       - 'POSTGRES_DB=loan_db'
       - 'POSTGRES_USER=loan_user'
-      - 'POSTGRES_PASSWORD=REDACTED'
+      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
     ports:
       - '5432:5432'
     volumes:

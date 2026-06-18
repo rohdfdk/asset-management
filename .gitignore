@@ -42,5 +42,10 @@ Thumbs.db
 /.nb-gradle/
 build/
 
-# local-only Spring config (contains secrets)
+# ==========================================
+# セキュリティ・環境設定ファイル
+# ==========================================
+.env
+
+# Spring Bootのローカル専用設定（秘密情報を含むため）
 src/main/resources/application-local.yaml
