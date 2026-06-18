@@ -62,9 +62,9 @@ stateDiagram-v2
     LoanList --> LoanList: 返却処理
 
     %% 各状態（画面）に対するビジネスルールの注記（NOTE）
-    note right of UserList: 🔒 管理者 (ROLE_ADMIN) 専用<br/>一般ユーザーには非表示
-    note left of LoanList: 👤 認可に応じたデータ制御<br/>・管理者は全件閲覧<br/>・一般は自身の貸出のみ
-    note right of LoanNew: 🛡️ 安全なバリデーション<br/>ログイン中の本人名義でのみ<br/>登録が許可される
+    note right of UserList: 🔒 管理者 (ROLE_ADMIN)<br/>一般ユーザーには非表示
+    note left of LoanList: 👤 データのアクセス制御<br/>・管理者は全件閲覧<br/>・一般は自身の貸出のみ
+    note right of LoanNew: 🛡️ 安全なバリデーション<br/>ログイン中の本人名義のみ<br/>登録が許可される
 ```
 ---
 
