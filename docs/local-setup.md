@@ -4,6 +4,18 @@ git clone [https://github.com/rohdfdk/asset-management.git](https://github.com/r
 cd asset-management
 ```
 ### 2. データベースの起動
+本リポジトリはセキュリティ担保のため、DBのパスワードをソースコードに含めていません。
+リポジトリ内にある .env.example を活用し、以下の手順でローカル環境用の環境変数ファイルを作成してから起動してください。
+
+1. サンプルファイルをコピーして .env を作成します。
+```bash
+cp .env.example .env
+```
+2. 作成した .env を開き、任意のDBパスワードを設定します。
+```bash
+POSTGRES_PASSWORD=your_local_db_password # ← ローカル用のDBパスワードを入力
+```
+3. Docker Compose でデータベースを起動します。
 ```bash
 make db-up
 ```
