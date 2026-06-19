@@ -78,10 +78,6 @@ public class Loan {
             return;
         }
 
-        if (!(LoanStatus.ACTIVE.equals(status) || LoanStatus.OVERDUE.equals(status))) {
-            throw new IllegalStateException("Loan is not active");
-        }
-
         this.actualReturnDate = returnDate;
         this.status = LoanStatus.RETURNED;
     }
