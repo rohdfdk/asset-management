@@ -72,23 +72,20 @@ public class User {
     }
 
     public void deactivate() {
+        if (this.status == UserStatus.INACTIVE) {
+            return;
+        }
         changeStatus(UserStatus.INACTIVE);
     }
 
     public void activate() {
+        if (this.status == UserStatus.ACTIVE) {
+            return;
+        }
         changeStatus(UserStatus.ACTIVE);
     }
 
     private void changeStatus(UserStatus nextStatus) {
-        if (this.status == nextStatus) {
-            return;
-        }
-
-        if (!this.status.canTransitTo(nextStatus)) {
-            throw new IllegalStateException(
-                    "Invalid user status transition: " + this.status + " -> " + nextStatus
-            );
-        }
         this.status = nextStatus;
     }
 
