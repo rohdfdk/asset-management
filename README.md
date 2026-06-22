@@ -12,31 +12,50 @@
 ---
 
 ## 📸 画面イメージ（マルチユーザー・認可制御）
-本プロジェクトでは、Spring Security（または認可ロジック）による権限管理と、業務の状況を俯瞰できる簡易ダッシュボード機能を実装しています。
+ロール（管理者 / 一般）に応じたメニューの出し分けと、業務状況を可視化するダッシュボードを実装しています。
 
-### 1. 管理者用画面（ダッシュボード）
-<table border="0">
+### 1. 管理者用画面（フルアクセス権限）
+* **特徴:** 全資産・全ユーザーの管理権限、およびシステム全体の稼働状況を集計するサマリーバッジを表示。
+
+<table>
   <tr>
-    <td><img src="docs/design/screen-flow/dashboard-admin.png" width="300" alt="管理者画面"></td>
-    <td><img src="docs/design/screen-flow/assetlist-admin.png" width="300" alt="資産一覧画面"> </td>
-  </tr>
-  <tr>
-    <td><img src="docs/design/screen-flow/userlist-admin.png" width="300" alt="ユーザー一覧画面"> </td>
-    <td><img src="docs/design/screen-flow/loannew-admin.png" width="300" alt="貸出申請画面"> </td>
+    <td><img src="docs/design/screen-flow/dashboard-admin.png" width="350" alt="管理者画面"><br><sub>ダッシュボード</sub></td>
+    <td><img src="docs/design/screen-flow/loannew-admin.png" width="350" alt="貸出申請画面"><br><sub>貸出申請画面</sub></td>
   </tr>
 </table>
 
-* **サマリーバッジ機能:** 画面上部に「総資産数」「貸出中」などのリアルタイム集計バッジを表示。ドメイン層の状態定義と連動し、システム全体の稼働状況をひと目で把握できます。
-* **フルアクセス権限:** ユーザー一覧や資産の全件管理など、管理者専用のコンポーネントが認可制御によって正しく表示されます。
+<details>
+  <summary>🔍 他の管理者用画面（一覧系・2枚）を表示</summary>
+  <br>
+  <table>
+    <tr>
+      <td><img src="docs/design/screen-flow/assetlist-admin.png" width="350" alt="資産一覧画面"><br><sub>資産一覧画面</sub></td>
+      <td><img src="docs/design/screen-flow/userlist-admin.png" width="350" alt="ユーザー一覧画面"><br><sub>ユーザー一覧画面</sub></td>
+    </tr>
+  </table>
+</details>
 
-### 2. 一般ユーザー用画面
-<div style="display: flex; justify-content: space-between;">
-    <img src="docs/design/screen-flow/dashboard-user.png" width="32%" alt="一般ユーザー画面">
-    <img src="docs/design/screen-flow/loanlist-user.png" width="32%" alt="貸出一覧画面">
-    <img src="docs/design/screen-flow/loannew-user.png" width="32%" alt="貸出申請画面">
-</div>
+---
 
-* **最小権限の原則（PoLP）:** 認可制御により、一般ユーザーには不要な管理用メニューや機密項目が非表示となり、自身の貸出・返却リクエストに特化したシンプルなUIに切り替わります。
+### 2. 一般ユーザー用画面（最小権限の原則）
+* **特徴:** 管理用メニューや機密項目を自動で非表示にし、自身の貸出・返却リクエストに特化したUI。
+
+<table>
+  <tr>
+    <td><img src="docs/design/screen-flow/dashboard-user.png" width="350" alt="一般ユーザー画面（ダッシュボード）"><br><sub>ダッシュボード</sub></td>
+    <td><img src="docs/design/screen-flow/loannew-user.png" width="350" alt="貸出申請画面"><br><sub>貸出申請画面</sub></td>
+  </tr>
+</table>
+
+<details>
+  <summary>🔍 一般ユーザー用の履歴画面を表示</summary>
+  <br>
+  <table>
+    <tr>
+      <td><img src="docs/design/screen-flow/loanlist-user.png" width="350" alt="貸出一覧画面"><br><sub>自分の貸出一覧</sub></td>
+      <td></td> </tr>
+  </table>
+</details>
 
 ---
 
