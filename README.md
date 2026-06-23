@@ -104,41 +104,41 @@ stateDiagram-v2
 
 ## 🛠 技術スタック
 
-| 分類           | 技術・ツール                       | 状態 / 備考                         |
-|:-------------|:-----------------------------|:--------------------------------|
-| **Backend**  | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装                        |
-| **Build**    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
-| **Database** | PostgreSQL                   | 開発環境: Docker Compose            |
-| **Quality**  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
-| **CI/CD**    | GitHub Actions               | **近日期限でCI（自動テスト）構築予定**          |
-| **Infra**    | Google Cloud (Cloud Run)     | **本番環境として検討中**                  |
-
+| 分類 | 技術・ツール | 状態 / 備考 |
+|:---|:---|:---|
+| Backend | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装 |
+| Build | Maven | 依存関係管理 / Maven Wrapper (./mvnw) |
+| Database | PostgreSQL | 開発環境: Docker Compose |
+| Quality | JUnit 5 / AssertJ / JaCoCo | 単体・結合テスト実行用 |
+| CI/CD | GitHub Actions | ⚠️ 近日期限でCI（自動テスト）構築予定 |
+| Infra | Google Cloud (Cloud Run) | 💡 本番環境として検討中 |
 ---
 
 ## 📂 設計ドキュメント
 
 本プロジェクトでは、コードを書く前の設計プロセスを重視し、ドメイン知識をドキュメントとして言語化・可視化しています。
 
-* 📖 **[ユビキタス言語定義集](docs/domain/ubiquitous-lexicon.md)** - 資産貸出業務のドメイン知識を整理し、コードと認識を一致させるための用語集
-* 📐 **[テスト方針・実績報告書](docs/testing/test-plan.md)** - テストピラミッドに基づく戦略、および品質実績のまとめ
+* [ユビキタス言語定義集](docs/domain/ubiquitous-lexicon.md)
+  資産貸出業務のドメイン知識を整理し、コードと認識を一致させるための用語集。
+* [テスト方針・実績報告書](docs/testing/test-plan.md)
+  テストピラミッドに基づく戦略、および品質実績のまとめ。
 
 ### 🔄 状態遷移図
 本アプリケーションにおける、主要な状態遷移の定義です。
 
-* 📄 **[資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)** - 業務の核となる、厳格な状態制御を可視化したメインの遷移図です。
-* 📁 **その他詳細な状態遷移:**
-  アプリ内の各エンティティに関する、より[細かい仕様は各ファイルを参照してください](docs/domain/state-transition-diagrams/)。
+* [資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)
+  業務の核となる、厳格な状態制御を可視化したメインの遷移図です。
+* その他の各エンティティに関する詳細は[こちら](docs/domain/state-transition-diagrams/)
 
 ---
 
 ## 📊 テスト・品質実績
 
-本プロジェクトでは「堅牢なドメインモデルの構築」を最優先とし、ビジネスロジックの核となるDomain層のEntityから徹底的にテストを拡充しています。現在はEntity層においてカバレッジ100%を達成しており、他レイヤーのテストも順次拡大予定です。
+本プロジェクトでは「堅牢なドメインモデルの構築」を最優先とし、ビジネスロジックの核となる Domain 層から徹底的にテストを拡充しています。
 
-* **総合テスト成否:** PASS (100%)
-* **対象レイヤー（Domain Entity）カバレッジ:** ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
+* **現在のステータス:** PASS (100%) ｜ ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
 
-> 💡 テストコードの記述ルール、テストピラミッドに基づく各層（Domain/Application/Infrastructure）の今後のテスト方針は、設計ドキュメントの 📐 [テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
+現在は Domain Entity 層においてカバレッジ 100% を達成しており、他レイヤーのテストも順次拡大予定です。詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
 
 ---
 
