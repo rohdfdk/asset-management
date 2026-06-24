@@ -64,7 +64,7 @@
 * **検証（アサーション）:** AssertJ （可読性の高い流れるようなインターフェースのため採用）
 * **モックライブラリ (今後着手予定):** Mockito （外部サービスやRepositoryのモック化）
 * **カバレッジ測定:** JaCoCo (Java Code Coverage)
-* **テスト用データベース (今後着手予定):** Testcontainers (PostgreSQL)
+* **テスト用データベース:** Testcontainers (PostgreSQL)
 * **CI/CD自動化 (今後着手予定):** GitHub Actions (Pull Request作成時に自動で `mvn test` を実行)
 
 ---

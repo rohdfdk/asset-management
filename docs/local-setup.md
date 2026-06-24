@@ -1,6 +1,6 @@
 ### 1. リポジトリのクローンと移動
 ```bash
-git clone [https://github.com/rohdfdk/asset-management.git](https://github.com/rohdfdk/asset-management.git)
+git clone https://github.com/rohdfdk/asset-management.git
 cd asset-management
 ```
 ### 2. データベースの起動
