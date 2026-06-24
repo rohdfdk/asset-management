@@ -11,6 +11,40 @@
 
 ---
 
+## 🏁 クイックスタート
+
+本プロジェクトは、セキュリティ担保のため環境変数ファイル（`.env`, `application-local.yaml`）の設定が必要です。
+
+```bash
+# 1. リポジトリのクローンと移動
+git clone https://github.com/rohdfdk/asset-management.git
+cd my-app
+
+# 2. 環境変数の作成とDB起動
+cp .env.example .env
+make db-up
+
+# 3. アプリケーションの起動
+./mvnw spring-boot:run
+```
+
+⚙️ ステップごとの詳細・Windowsでの起動について
+パスワードの設定値や、Windows（mvnw.cmd）での起動手順については、👉 **[ローカル環境起動ガイド](docs/local-setup.md)** を参照してください。
+
+---
+
+## 🛠️ 技術スタック
+
+| 分類 | 技術・ツール | 状態 / 備考 |
+|:---|:---|:---|
+| Backend | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装 |
+| Build | Maven | 依存関係管理 / Maven Wrapper (./mvnw) |
+| Database | PostgreSQL | 開発環境: Docker Compose |
+| Quality | JUnit 5 / AssertJ / JaCoCo | 単体・結合テスト実行用 |
+| CI/CD | GitHub Actions | ⚠️ 近日期限でCI（自動テスト）構築予定 |
+| Infra | Google Cloud (Cloud Run) | 💡 本番環境として検討中 |
+---
+
 ## 📸 画面イメージ（マルチユーザー・認可制御）
 ロール（管理者 / 一般）に応じたメニューの出し分けと、業務状況を可視化するダッシュボードを実装しています。
 
@@ -102,18 +136,6 @@ stateDiagram-v2
 
 ---
 
-## 🛠 技術スタック
-
-| 分類 | 技術・ツール | 状態 / 備考 |
-|:---|:---|:---|
-| Backend | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装 |
-| Build | Maven | 依存関係管理 / Maven Wrapper (./mvnw) |
-| Database | PostgreSQL | 開発環境: Docker Compose |
-| Quality | JUnit 5 / AssertJ / JaCoCo | 単体・結合テスト実行用 |
-| CI/CD | GitHub Actions | ⚠️ 近日期限でCI（自動テスト）構築予定 |
-| Infra | Google Cloud (Cloud Run) | 💡 本番環境として検討中 |
----
-
 ## 📂 設計ドキュメント
 
 本プロジェクトでは、コードを書く前の設計プロセスを重視し、ドメイン知識をドキュメントとして言語化・可視化しています。
@@ -141,11 +163,3 @@ stateDiagram-v2
 現在は Domain Entity 層においてカバレッジ 100% を達成しており、他レイヤーのテストも順次拡大予定です。詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
 
 ---
-
-## 🏁 ローカル環境の開発ガイド
-
-### 🛠️ 前提条件
-* **Docker / Docker Compose** がインストールされ、起動していること。
-
-### 🚀 起動手順
-詳細な環境構築およびアプリケーションの起動手順については、👉 **[ローカル環境起動ガイド](docs/local-setup.md)**
