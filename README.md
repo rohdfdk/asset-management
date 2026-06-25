@@ -2,7 +2,7 @@
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Framework](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)
-[![CI](https://github.com/rohdfdk/asset-management/actions/workflows/test.yml/badge.svg)](https://github.com/rohdfdk/asset-management/actions)
+[![CI](https://github.com/rohdfdk/asset-management/actions/workflows/ci.yml/badge.svg)](https://github.com/rohdfdk/asset-management/actions)
 
 社内物品や書籍などの貸出・返却業務を効率化するためのバックエンドシステムです。
 ドメイン駆動設計（DDD）の思想を取り入れ、ビジネスルールの堅牢性と変更への強さを意識して開発しています。
@@ -35,14 +35,14 @@ make db-up
 
 ## 🛠️ 技術スタック
 
-| 分類 | 技術・ツール | 状態 / 備考 |
-|:---|:---|:---|
-| Backend | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装 |
-| Build | Maven | 依存関係管理 / Maven Wrapper (./mvnw) |
-| Database | PostgreSQL | 開発環境: Docker Compose |
-| Quality | JUnit 5 / AssertJ / JaCoCo | 単体・結合テスト実行用 |
-| CI/CD | GitHub Actions | ⚠️ 近日期限でCI（自動テスト）構築予定 |
-| Infra | Google Cloud (Cloud Run) | 💡 本番環境として検討中 |
+| 分類       | 技術・ツール                       | 状態 / 備考                         |
+|:---------|:-----------------------------|:--------------------------------|
+| Backend  | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装                        |
+| Build    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
+| Database | PostgreSQL                   | 開発環境: Docker Compose            |
+| Quality  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
+| CI/CD    | GitHub Actions               | ⚠️ 近日期限でCI（自動テスト）構築予定           |
+| Infra    | Google Cloud (Cloud Run)     | 💡 本番環境として検討中                   |
 ---
 
 ## 📸 画面イメージ（マルチユーザー・認可制御）
