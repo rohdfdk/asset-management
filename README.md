@@ -2,7 +2,7 @@
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Framework](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)
-[![CI](https://github.com/rohdfdk/asset-management/actions/workflows/ci.yml/badge.svg)](https://github.com/rohdfdk/asset-management/actions)
+[![CI](https://github.com/rohdfdk/asset-management/actions/workflows/ci.yaml/badge.svg)](https://github.com/rohdfdk/asset-management/actions)
 
 社内物品や書籍などの貸出・返却業務を効率化するためのバックエンドシステムです。
 ドメイン駆動設計（DDD）の思想を取り入れ、ビジネスルールの堅牢性と変更への強さを意識して開発しています。
