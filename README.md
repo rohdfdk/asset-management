@@ -41,7 +41,7 @@ make db-up
 | Build    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
 | Database | PostgreSQL                   | 開発環境: Docker Compose            |
 | Quality  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
-| CI/CD    | GitHub Actions               | ⚠️ 近日期限でCI（自動テスト）構築予定           |
+| CI/CD    | GitHub Actions               | CI（自動テスト）構築                     |
 | Infra    | Google Cloud (Cloud Run)     | 💡 本番環境として検討中                   |
 ---
 
@@ -131,7 +131,7 @@ stateDiagram-v2
     * **成果:** 不正データや異常な状態遷移をドメインの入り口で確実にブロックし、可読性と安全性を両立。
 * **二重送信を防ぐべき等性の担保**
     * ボタン連打等のWebトラブルに備え、資産の返却処理等に「べき等」な状態遷移を実装。
-* **【Next Step】CIによる品質の自動検証**
+* **CIによる品質の自動検証**
     * 開発スピード向上に向け、GitHub Actionsを用いたCI環境の構築を予定（自動テスト・JaCoCoによるカバレッジチェックの自動化）。
 
 ---

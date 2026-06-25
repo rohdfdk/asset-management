@@ -65,7 +65,7 @@
 * **モックライブラリ (今後着手予定):** Mockito （外部サービスやRepositoryのモック化）
 * **カバレッジ測定:** JaCoCo (Java Code Coverage)
 * **テスト用データベース:** Testcontainers (PostgreSQL)
-* **CI/CD自動化 (今後着手予定):** GitHub Actions (Pull Request作成時に自動で `mvn test` を実行)
+* **CI/CD自動化 :** GitHub Actions (Pull Request作成時に自動で `mvn test` を実行)
 
 ---
 
@@ -89,7 +89,7 @@
 本項は、今後のビルドにおけるテスト結果レポートの掲載エリアです（現在 GitHub Actions による自動更新を整備中）。
 
 ### 6.1 テスト実行サマリー
-* **最終実行日時:** 2026年6月25日 22:30 (JST)  * **実行環境:** GitHub Actions (Ubuntu-latest, Temurin-21)
+* **最終実行日時:** 2026年6月25日 18:20 (JST)  * **実行環境:** GitHub Actions (Ubuntu-latest, Temurin-21)
 
 ### 6.2 カバレッジ測定目標（JaCoCoレポートより）
 
