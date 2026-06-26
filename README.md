@@ -7,45 +7,49 @@
 社内物品や書籍などの貸出・返却業務を効率化するためのバックエンドシステムです。
 ドメイン駆動設計（DDD）の思想を取り入れ、ビジネスルールの堅牢性と変更への強さを意識して開発しています。
 
-⚠️ Note: 本プロジェクトは開発中のため、機能やCIワークフローの仕様は予告なく変更される場合があります。
+⚠️ Note: 本プロジェクトは継続的に改善しており、
+機能およびCI設定はテストとレビューを通じて管理された形で更新しています。
+
+- 👉 [デモを見る](#-画面イメージマルチユーザー認可制御)
+- 🛠️ [すぐ動かす](#-クイックスタート)
 
 ---
 
-## 🏁 クイックスタート
+## 🏗️ 設計上の取り組み
 
-本プロジェクトは、セキュリティ担保のため環境変数ファイル（`.env`, `application-local.yaml`）の設定が必要です。
+### Domain層への業務ルール集約
+貸出可否や状態遷移などの業務ルールをDomain層に集約し、
+Entityの状態変更を制御することで不正な遷移を防止しています。
 
-```bash
-# 1. リポジトリのクローンと移動
-git clone https://github.com/rohdfdk/asset-management.git
-cd my-app
+### 状態遷移モデルによる資産管理
+資産状態を以下の4状態で管理しています。
+- AVAILABLE
+- LOANED
+- MAINTENANCE
+- RETIRED
 
-# 2. 環境変数の作成とDB起動
-cp .env.example .env
-make db-up
+状態ごとに許可される操作を明確化し、ドメインルールとして一貫性を担保しています。
 
-# 3. アプリケーションの起動
-./mvnw spring-boot:run
-```
+### Domain層の品質担保（テスト）
+Domain層を中心にテストを実装し、ブランチカバレッジ100%を達成しています。
 
-⚙️ ステップごとの詳細・Windowsでの起動について
-パスワードの設定値や、Windows（mvnw.cmd）での起動手順については、👉 **[ローカル環境起動ガイド](docs/local-setup.md)** を参照してください。
+### CIによる継続的品質保証
+GitHub Actionsによりテストと品質チェックを自動化し、
+変更に対する品質劣化を防止しています。
 
 ---
 
-## 🛠️ 技術スタック
+## 📊 テスト・品質実績
 
-| 分類       | 技術・ツール                       | 状態 / 備考                         |
-|:---------|:-----------------------------|:--------------------------------|
-| Backend  | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装                        |
-| Build    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
-| Database | PostgreSQL                   | 開発環境: Docker Compose            |
-| Quality  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
-| CI/CD    | GitHub Actions               | CI（自動テスト）構築                     |
-| Infra    | Google Cloud (Cloud Run)     | 💡 本番環境として検討中                   |
+本プロジェクトでは「堅牢なドメインモデルの構築」を最優先とし、ビジネスロジックの核となる Domain 層から徹底的にテストを拡充しています。
+
+* **現在のステータス:** PASS (100%) ｜ ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
+
+現在は Domain Entity 層においてカバレッジ 100% を達成しており、他レイヤーのテストも順次拡大予定です。詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
+
 ---
 
-## 📸 画面イメージ（マルチユーザー・認可制御）
+## 📸 画面イメージ（マルチユーザー・認可制御） / Demo
 ロール（管理者 / 一般）に応じたメニューの出し分けと、業務状況を可視化するダッシュボードを実装しています。
 
 ### 1. 管理者用画面（フルアクセス権限）
@@ -121,18 +125,16 @@ stateDiagram-v2
 ```
 ---
 
-## 🚀 本プロジェクトのこだわりポイント
+## 🛠️ 技術スタック
 
-* **DDDによる堅牢な設計**
-    * 複雑な業務ルール（貸出可否・ペナルティ等）をドメイン層（Entity）へ完全にカプセル化。
-    * **成果:** 仕様変更に強い設計を実現し、Domain層のブランチカバレッジ（C1）100%を達成。
-* **Java 21を活用したガード句**
-    * Pattern Matching for switch などのモダンな構文を積極採用。
-    * **成果:** 不正データや異常な状態遷移をドメインの入り口で確実にブロックし、可読性と安全性を両立。
-* **二重送信を防ぐべき等性の担保**
-    * ボタン連打等のWebトラブルに備え、資産の返却処理等に「べき等」な状態遷移を実装。
-* **CIによる品質の自動検証**
-    * 開発スピード向上に向け、GitHub Actionsを用いたCI環境の構築を予定（自動テスト・JaCoCoによるカバレッジチェックの自動化）。
+| 分類       | 技術・ツール                       | 状態 / 備考                         |
+|:---------|:-----------------------------|:--------------------------------|
+| Backend  | Java 21 / Spring Boot 3.5.14 | 主要ロジック実装                        |
+| Build    | Maven                        | 依存関係管理 / Maven Wrapper (./mvnw) |
+| Database | PostgreSQL                   | 開発環境: Docker Compose            |
+| Quality  | JUnit 5 / AssertJ / JaCoCo   | 単体・結合テスト実行用                     |
+| CI/CD    | GitHub Actions               | CI（自動テスト）構築                     |
+| Infra    | Google Cloud (Cloud Run)     | 💡 本番環境として検討中                   |
 
 ---
 
@@ -154,12 +156,24 @@ stateDiagram-v2
 
 ---
 
-## 📊 テスト・品質実績
+## 🏁 クイックスタート / Quick Start
 
-本プロジェクトでは「堅牢なドメインモデルの構築」を最優先とし、ビジネスロジックの核となる Domain 層から徹底的にテストを拡充しています。
+本プロジェクトは、セキュリティ担保のため環境変数ファイル（`.env`, `application-local.yaml`）の設定が必要です。
 
-* **現在のステータス:** PASS (100%) ｜ ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
+```bash
+# 1. リポジトリのクローンと移動
+git clone https://github.com/rohdfdk/asset-management.git
+cd asset-management
 
-現在は Domain Entity 層においてカバレッジ 100% を達成しており、他レイヤーのテストも順次拡大予定です。詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
+# 2. 環境変数の作成とDB起動
+cp .env.example .env
+make db-up
+
+# 3. アプリケーションの起動
+./mvnw spring-boot:run
+```
+
+⚙️ ステップごとの詳細・Windowsでの起動について
+パスワードの設定値や、Windows（mvnw.cmd）での起動手順については、👉 **[ローカル環境起動ガイド](docs/local-setup.md)** を参照してください。
 
 ---
