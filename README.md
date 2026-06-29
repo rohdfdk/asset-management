@@ -1,52 +1,96 @@
-# 貸出管理システム (Asset Loan Management System)
+# 🏷️貸出管理システム (Asset Loan Management System)
 
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![Framework](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)
 [![CI](https://github.com/rohdfdk/asset-management/actions/workflows/ci.yaml/badge.svg)](https://github.com/rohdfdk/asset-management/actions)
 
-社内物品や書籍などの貸出・返却業務を効率化するためのバックエンドシステムです。
-ドメイン駆動設計（DDD）の思想を取り入れ、ビジネスルールの堅牢性と変更への強さを意識して開発しています。
-
-⚠️ Note: 本プロジェクトは継続的に改善しており、
-機能およびCI設定はテストとレビューを通じて管理された形で更新しています。
-
-- 👉 [デモを見る](#demo)
-- 🛠️ [すぐ動かす](#quickstart)
+社内の物品・資産貸出業務における「状態管理の属人化」と「不正状態の発生」を防止するため、
+ドメイン駆動設計（DDD）に基づいて設計・実装したWebアプリケーションです。
 
 ---
 
-## 🏗️ 設計上の取り組み
+## 📌 解決した課題
 
-### Domain層への業務ルール集約
-貸出可否や状態遷移などの業務ルールをDomain層に集約し、
-Entityの状態変更を制御することで不正な遷移を防止しています。
+従来の貸出業務では以下の課題が存在していました：
 
-### 状態遷移モデルによる資産管理
-資産状態を以下の4状態で管理しています。
+- 貸出可否が担当者判断に依存
+- 重複貸出や返却漏れの発生
+- 状態遷移ルールが明文化されていない
+- システム上で不正状態が発生可能
+
+👉 これらを「状態遷移モデル」と「ドメイン制御」により解決
+
+---
+
+## 🏗️ 設計方針
+
+本プロジェクトでは以下の設計思想を採用しています：
+
+- 業務ルールをDomain層へ集約
+- 状態遷移を明示的なモデルとして定義
+- Entityの状態変更はDomain層でのみ制御
+- UI・Application層では状態操作を禁止
+
+👉 「状態の正しさ」をシステムで保証する設計
+
+---
+
+## 🔄 ドメインモデル（状態・業務ルール）
+
+資産は以下の4状態で管理：
+
 - AVAILABLE
 - LOANED
 - MAINTENANCE
 - RETIRED
 
-状態ごとに許可される操作を明確化し、ドメインルールとして一貫性を担保しています。
+状態遷移はドメインルールとして制御され、
+不正な遷移を防止しています。
 
-### Domain層の品質担保（テスト）
-Domain層を中心にテストを実装し、ブランチカバレッジ100%を達成しています。
-
-### CIによる継続的品質保証
-GitHub Actionsによりテストと品質チェックを自動化し、
-変更に対する品質劣化を防止しています。
+👉 状態遷移図
+- [資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)
 
 ---
 
-## 📊 テスト・品質実績
+## 🧪 テスト・品質実績 ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
 
-本プロジェクトでは「堅牢なドメインモデルの構築」を最優先とし、ビジネスロジックの核となる Domain 層から徹底的にテストを拡充しています。
+- Domain層を中心に単体テストを構築
+- Domain Entity 層においてカバレッジ 100%
+- ビジネスロジックの回帰防止を重視
+- GitHub Actionsによる自動テスト
 
-* **現在のステータス:** PASS (100%) ｜ ![Coverage](https://img.shields.io/badge/Entity_Coverage-100%25-brightgreen)
+👉 「壊れないドメインモデル」を設計思想として採用
 
-現在は Domain Entity 層においてカバレッジ 100% を達成しており、他レイヤーのテストも順次拡大予定です。詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
+詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
 
+---
+
+### 🗺️ 画面遷移図・認可コントロール
+本アプリケーションの画面遷移と、Role（権限）によるアクセス制御の定義です。
+```mermaid
+stateDiagram-v2
+    [*] --> Dashboard
+
+    Dashboard --> AssetList: 資産一覧
+    Dashboard --> UserList: ユーザー一覧
+    Dashboard --> LoanList: 貸出一覧
+    Dashboard --> LoanNew: 貸出登録
+
+    AssetList --> Dashboard: 戻る
+    UserList --> Dashboard: 戻る
+    LoanList --> Dashboard: 戻る
+
+    LoanList --> LoanNew: 貸出登録
+    LoanNew --> LoanList: 登録
+    LoanNew --> LoanList: キャンセル
+
+    LoanList --> LoanList: 返却処理
+
+    %% 各状態（画面）に対するビジネスルールの注記（NOTE）
+    note right of UserList: 🔒 管理者 (ROLE_ADMIN)<br/>一般ユーザーには非表示
+    note left of LoanList: 👤 データのアクセス制御<br/>・管理者は全件閲覧<br/>・一般は自身の貸出のみ
+    note right of LoanNew: 🛡️ 安全なバリデーション<br/>ログイン中の本人名義のみ<br/>登録が許可される
+```
 ---
 
 ## 📸 画面イメージ 
@@ -98,34 +142,6 @@ GitHub Actionsによりテストと品質チェックを自動化し、
 
 ---
 
-### 🗺️ 画面遷移図・認可コントロール
-本アプリケーションの画面遷移と、Role（権限）によるアクセス制御の定義です。
-```mermaid
-stateDiagram-v2
-    [*] --> Dashboard
-
-    Dashboard --> AssetList: 資産一覧
-    Dashboard --> UserList: ユーザー一覧
-    Dashboard --> LoanList: 貸出一覧
-    Dashboard --> LoanNew: 貸出登録
-
-    AssetList --> Dashboard: 戻る
-    UserList --> Dashboard: 戻る
-    LoanList --> Dashboard: 戻る
-
-    LoanList --> LoanNew: 貸出登録
-    LoanNew --> LoanList: 登録
-    LoanNew --> LoanList: キャンセル
-
-    LoanList --> LoanList: 返却処理
-
-    %% 各状態（画面）に対するビジネスルールの注記（NOTE）
-    note right of UserList: 🔒 管理者 (ROLE_ADMIN)<br/>一般ユーザーには非表示
-    note left of LoanList: 👤 データのアクセス制御<br/>・管理者は全件閲覧<br/>・一般は自身の貸出のみ
-    note right of LoanNew: 🛡️ 安全なバリデーション<br/>ログイン中の本人名義のみ<br/>登録が許可される
-```
----
-
 ## 🛠️ 技術スタック
 
 | 分類       | 技術・ツール                       | 状態 / 備考                         |
@@ -147,13 +163,6 @@ stateDiagram-v2
   資産貸出業務のドメイン知識を整理し、コードと認識を一致させるための用語集。
 * [テスト方針・実績報告書](docs/testing/test-plan.md)
   テストピラミッドに基づく戦略、および品質実績のまとめ。
-
-### 🔄 状態遷移図
-本アプリケーションにおける、主要な状態遷移の定義です。
-
-* [資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)
-  業務の核となる、厳格な状態制御を可視化したメインの遷移図です。
-* その他の各エンティティに関する詳細は[こちら](docs/domain/state-transition-diagrams/)
 
 ---
 
