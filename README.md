@@ -16,7 +16,6 @@
 - 貸出可否が担当者判断に依存
 - 重複貸出や返却漏れの発生
 - 状態遷移ルールが明文化されていない
-- システム上で不正状態が発生可能
 
 👉 これらを「状態遷移モデル」と「ドメイン制御」により解決
 
@@ -44,11 +43,10 @@
 - MAINTENANCE
 - RETIRED
 
-状態遷移はドメインルールとして制御され、
-不正な遷移を防止しています。
+各状態で許可される操作を制約として実装し、
+不正な状態遷移を防止しています。
 
-👉 状態遷移図
-- [資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)
+👉 状態遷移をドメインモデルとして一元管理
 
 ---
 
@@ -59,9 +57,7 @@
 - ビジネスロジックの回帰防止を重視
 - GitHub Actionsによる自動テスト
 
-👉 「壊れないドメインモデル」を設計思想として採用
-
-詳細なテストコードの記述ルールや各層のテスト方針については、[テスト方針・実績報告書](docs/testing/test-plan.md) を参照してください。
+👉 テストにより業務ルールの回帰を防止
 
 ---
 
@@ -153,20 +149,26 @@ stateDiagram-v2
 | CI/CD    | GitHub Actions               | CI（自動テスト）構築                     |
 | Infra    | Google Cloud (Cloud Run)     | 💡 本番環境として検討中                   |
 
----
+## 📂 関連ドキュメント
 
-## 📂 設計ドキュメント
+### 設計
 
-本プロジェクトでは、コードを書く前の設計プロセスを重視し、ドメイン知識をドキュメントとして言語化・可視化しています。
+- [ユビキタス言語定義集](docs/domain/ubiquitous-lexicon.md)
+- [資産貸出状態遷移図](docs/domain/state-transition-diagrams/asset-state-transition-diagram.mmd)
+- [ER図](docs/design/er-diagram/erd.mmd)
 
-* [ユビキタス言語定義集](docs/domain/ubiquitous-lexicon.md)
-  資産貸出業務のドメイン知識を整理し、コードと認識を一致させるための用語集。
-* [テスト方針・実績報告書](docs/testing/test-plan.md)
-  テストピラミッドに基づく戦略、および品質実績のまとめ。
+<details>
+<summary>その他の設計資料</summary>
 
----
+- [その他の状態遷移図](docs/domain/state-transition-diagrams/)
 
-## 🏁 クイックスタート 
+</details>
+
+### 品質
+
+- [テスト方針・実績報告書](docs/testing/test-plan.md)
+
+## 🏁 起動方法
 <a id="quickstart"></a>
 
 本プロジェクトは、セキュリティ担保のため環境変数ファイル（`.env`, `application-local.yaml`）の設定が必要です。
